@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.duongdk.edu.Hiruez.model.FoodItem;
@@ -41,14 +42,13 @@ public class DatabaseSeeder implements CommandLineRunner {
 	private final StoreRepository storeRepository;
 	private final TableRepository tableRepository;
 	private final UserRepository userRepository;
-	private final UserRoleRepository userRoleRepository;
-	
-	
+	private final UserRoleRepository userRoleRepository;	
+	private final PasswordEncoder passwordEncoder;
 	@Autowired
 	public DatabaseSeeder(FoodItemRepository foodItemRepository, FoodMenuRepository foodMenuRepository,
 			MenuRepository menuRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository,
 			PaymentRepository paymentRepository, StoreRepository storeRepository, TableRepository tableRepository,
-			UserRepository userRepository, UserRoleRepository userRoleRepository) {
+			UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
 		super();
 		this.foodItemRepository = foodItemRepository;
 		this.foodMenuRepository = foodMenuRepository;
@@ -60,19 +60,21 @@ public class DatabaseSeeder implements CommandLineRunner {
 		this.tableRepository = tableRepository;
 		this.userRepository = userRepository;
 		this.userRoleRepository = userRoleRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	@Override
 	public void run(String... args) throws Exception {
+
 		// seeder here
 		UserRole role_sysadmin = new UserRole("sysadmin"); 
 		UserRole role_admin = new UserRole("admin");
 		UserRole role_customer = new UserRole("customer");
 		userRoleRepository.saveAll(List.of(role_sysadmin, role_admin, role_customer));
 		
-		User sysadminuser = new User("sysadmin", "sysadmin", "hiruez@gmail.com", 99999L, role_sysadmin);
-		User customer_sample = new User("duongdk", "123456", "daokimduong322@gmail.com", 100L, role_customer);
-		User bunCoTuyet_admin = new User("buncoTuyet_admin", "buncoTuyet_admin", "", 500L, role_admin);
+		User sysadminuser = new User("sysadmin", passwordEncoder.encode("sysadmin"), "hiruez@gmail.com", 99999L, role_sysadmin);
+		User customer_sample = new User("duongdk", passwordEncoder.encode("123456"), "daokimduong322@gmail.com", 100L, role_customer);
+		User bunCoTuyet_admin = new User("buncoTuyet_admin", passwordEncoder.encode("buncoTuyet_admin"), "", 500L, role_admin);
 		userRepository.saveAll(List.of(sysadminuser, bunCoTuyet_admin, customer_sample));
 		
 		Store buncoTuyet_store = new Store(bunCoTuyet_admin, "Bún cá cô Tuyết", "117 P. Trần Đại Nghĩa, Bách Khoa, Hai Bà Trưng, Hà Nội", "0383338888", "Ăn là ngon - Nghĩ là thèm", "buncacotuyet@gmail.com");
@@ -119,5 +121,4 @@ public class DatabaseSeeder implements CommandLineRunner {
 		orderRepository.save(firstOrder);
 		
 	}
-	
 }
