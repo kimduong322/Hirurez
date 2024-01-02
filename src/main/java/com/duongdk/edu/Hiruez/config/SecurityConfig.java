@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.config.Customizer;
 @Configuration
 @EnableWebSecurity
@@ -35,10 +36,12 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((authorize) -> authorize
-					.requestMatchers("/", "/home").permitAll()
-				.requestMatchers("/admin/**").hasRole("sysadmin")
-				.requestMatchers("/store/**").hasRole("admin")
-				.requestMatchers("/customer/**").hasRole("customer")
+//				.requestMatchers("/**", "/home").permitAll()
+//				.requestMatchers("/storemanagement/dashboard/**").permitAll()
+				.requestMatchers("/images/**").permitAll()
+//				.requestMatchers("/admin/**").hasRole("sysadmin")
+//				.requestMatchers("/storemanagement/**").hasRole("admin")
+//				.requestMatchers("/customer/**").hasRole("customer")
 				.anyRequest().authenticated()
 			)
 			.httpBasic(Customizer.withDefaults())
@@ -47,10 +50,11 @@ public class SecurityConfig {
 					.permitAll()
 				)
 			.logout((logout) -> logout.logoutUrl("/logout"))
-			.authenticationProvider(userAuthenticationProvider)
 			.exceptionHandling(exceptionHandling -> exceptionHandling
                     .accessDeniedPage("/access-denied")
-            );
+            )
+			.authenticationProvider(userAuthenticationProvider)
+			.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		return http.build();
 	}
 }

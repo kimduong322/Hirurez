@@ -1,6 +1,8 @@
 package com.duongdk.edu.Hiruez;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +97,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 		FoodItem buncoTuyet_store_fooditem5 = new FoodItem(buncoTuyet_store, "Mì xào Indomie thập cẩm", 2.5f, "Mì xào full topping nóng hổi");
 		foodItemRepository.saveAll(List.of(buncoTuyet_store_fooditem1, buncoTuyet_store_fooditem2, buncoTuyet_store_fooditem3, buncoTuyet_store_fooditem4, buncoTuyet_store_fooditem5));
 		
-		Menu buncoTuyet_store_menu = new Menu(buncoTuyet_store, LocalDateTime.now());
+		Menu buncoTuyet_store_menu = new Menu(buncoTuyet_store, LocalDateTime.of(LocalDate.of(2023,12, 03), LocalTime.of(8, 0)), false);
 		menuRepository.save(buncoTuyet_store_menu);
 		
 		FoodMenu buncacoTuyet_store_menu_03122023_1 = new FoodMenu(buncoTuyet_store_fooditem1, buncoTuyet_store_menu, 50L);
@@ -119,6 +121,18 @@ public class DatabaseSeeder implements CommandLineRunner {
 		orderItemRepository.saveAll(List.of(item1, item2));
 		firstOrder.setTotal(amout); firstOrder.setOrderTime(firstOrder_payment.getPaymentTime());
 		orderRepository.save(firstOrder);
+		
+		Order secondOrder = new Order(customer_sample, buncoTuyet_store_table3, LocalDateTime.of(LocalDate.of(2023,12, 30), LocalTime.of(15, 26)), 0L);
+		orderRepository.save(secondOrder);
+		OrderItem item3 = new OrderItem(secondOrder, buncoTuyet_store_fooditem3, 2L);
+		OrderItem item4 = new OrderItem(secondOrder, buncoTuyet_store_fooditem4, 3L);
+		
+		float amout2 = item3.getQuantity() * item3.getFood().getPrice() + item4.getQuantity() * item4.getFood().getPrice();
+		Payment secondOrder_payment = new Payment(secondOrder, amout2, LocalDateTime.of(LocalDate.of(2023,12, 30), LocalTime.of(15, 26)), "SUCCESS");
+		paymentRepository.save(secondOrder_payment);
+		orderItemRepository.saveAll(List.of(item3, item4));
+		secondOrder.setTotal(amout2); secondOrder.setOrderTime(secondOrder_payment.getPaymentTime());
+		orderRepository.save(secondOrder);
 		
 	}
 }

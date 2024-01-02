@@ -13,11 +13,6 @@ import com.duongdk.edu.Hiruez.service.StoreService;
 public class StoreServiceImpl implements StoreService {
 	private final StoreRepository storeRepository;
 	
-	@Override
-	public void createSampleData() {
-		
-		
-	}
 	
     @Autowired
     public StoreServiceImpl(StoreRepository storeRepository) {
@@ -43,5 +38,8 @@ public class StoreServiceImpl implements StoreService {
 	public void deleteStore(Long id) {
 		storeRepository.deleteById(id);
 	}
-
+	
+	public Store findStoreByUsername(String username) {
+        return storeRepository.findStoreByOwner_Username(username);
+    }
 }

@@ -48,8 +48,8 @@ public class Order {
     private User byUser;
 	
 	@ManyToOne
-    @JoinColumn(name = "onTableId", nullable = false)
-    private Table onTable;
+	@JoinColumn(name = "on_table_id", nullable = false)
+	private Table onTable;
 	
 	private LocalDateTime orderTime;
     private float total;

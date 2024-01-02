@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.duongdk.edu.Hiruez.model.FoodItem;
+import com.duongdk.edu.Hiruez.model.Store;
 import com.duongdk.edu.Hiruez.repository.FoodItemRepository;
 import com.duongdk.edu.Hiruez.service.FoodItemService;
 
@@ -38,5 +39,10 @@ public class FoodItemServiceImpl implements FoodItemService {
 	@Override
 	public void deleteFoodItem(Long id) {
 		foodItemRepository.deleteById(id);
+	}
+
+	@Override
+	public List<FoodItem> getAllFoodItemsForStore(Store store) {
+		return foodItemRepository.findByBelongsToStore(store);
 	}
 }

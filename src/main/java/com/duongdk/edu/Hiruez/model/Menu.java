@@ -14,7 +14,15 @@ import jakarta.persistence.ManyToOne;
 @jakarta.persistence.Table(name = "menus")
 public class Menu {
 
-    public Store getStore() {
+    public Boolean getIsCurrent() {
+		return isCurrent;
+	}
+
+	public void setIsCurrent(Boolean isCurrent) {
+		this.isCurrent = isCurrent;
+	}
+
+	public Store getStore() {
 		return store;
 	}
 
@@ -44,11 +52,15 @@ public class Menu {
     
     @Column(name = "created_time")
     private LocalDateTime createdTime;
+    
+    @Column(name = "is_current")
+    private Boolean isCurrent;
 
-	public Menu(Store store, LocalDateTime createdTime) {
+	public Menu(Store store, LocalDateTime createdTime, Boolean isCurrent) {
 		super();
 		this.store = store;
 		this.createdTime = createdTime;
+		this.isCurrent = isCurrent;
 	}
 
 	public Menu() {

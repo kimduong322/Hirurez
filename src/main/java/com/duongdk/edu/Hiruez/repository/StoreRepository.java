@@ -7,5 +7,5 @@ import com.duongdk.edu.Hiruez.model.Store;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {
-
+	Store findStoreByOwner_Username(String username);
 }

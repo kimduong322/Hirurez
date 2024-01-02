@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.util.StringUtils;
 
 import com.duongdk.edu.Hiruez.model.User;
 import com.duongdk.edu.Hiruez.model.UserRole;
@@ -23,6 +22,10 @@ import com.duongdk.edu.Hiruez.repository.UserRepository;
 import com.duongdk.edu.Hiruez.repository.UserRoleRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Component
 @RequiredArgsConstructor
 public class UserAuthenticationProvide implements AuthenticationProvider, UserDetailsService {
@@ -63,12 +66,16 @@ public class UserAuthenticationProvide implements AuthenticationProvider, UserDe
         	UserRole userRole = optionalUserRole.get();
         	authorities.add(new SimpleGrantedAuthority(userRole.getName()));
         }
+        Logger logger = LoggerFactory.getLogger(UserAuthenticationProvide.class);
+        logger.info("Logging object: {}", authorities);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), authentication.getCredentials(), authorities);
         token.setDetails(authentication.getDetails());
         return token;
     }
 	@Override
 	public boolean supports(Class<?> authentication) {
+		Logger logger = LoggerFactory.getLogger(UserAuthenticationProvide.class);
+		logger.info("authentication Confirm = {}", authentication.equals(UsernamePasswordAuthenticationToken.class));
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
 
