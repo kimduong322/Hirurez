@@ -23,6 +23,7 @@ import com.duongdk.edu.Hiruez.model.OrderItem;
 import com.duongdk.edu.Hiruez.model.Payment;
 import com.duongdk.edu.Hiruez.model.Store;
 import com.duongdk.edu.Hiruez.model.Table;
+import com.duongdk.edu.Hiruez.qrcodeUtils.QrcodeConfiguration;
 import com.duongdk.edu.Hiruez.repository.FoodMenuRepository;
 import com.duongdk.edu.Hiruez.repository.MenuRepository;
 import com.duongdk.edu.Hiruez.repository.OrderItemRepository;
@@ -61,6 +62,8 @@ public class StoreAdminController {
 	@Autowired private MenuRepository menuRepository;
 	
 	@Autowired private OrderItemRepository orderItemRepository;
+	
+	@Autowired private QrcodeConfiguration qrcodeConfiguration;
 	
 	@GetMapping("/storemanagement/dashboard/{username}")
 	public String getStoreDashboard(@PathVariable String username, Model model) {
@@ -322,4 +325,36 @@ public class StoreAdminController {
 	    model.addAttribute("items", items);
     	return "payment_detail";
     }
+    
+    
+    // Export Qr code for admin
+    @GetMapping("/storemanagement/dashboard/{username}/table/exportqrcode")
+    public String exportQrcode(@PathVariable String username, Model model) {
+    	Store store = storeServiceImpl.findStoreByUsername(username);
+	    model.addAttribute("store", store);
+	    List<Table> tables = tableRepository.findByBelongsToStore(store);
+		model.addAttribute("tables", tables);
+		
+		List<String> qrcodeBase64s = new ArrayList<>();
+		
+		for(Table table: tables) {
+			String url = qrcodeConfiguration.getQrcodeBaseIpAndPort() 
+					+ "/customer/store/" 
+					+ store.getId()
+					+ "/table/"
+					+ table.getId()
+					+"/invoice";
+			try {
+	            // Generate QR code for the URL and add it to the list
+	            String qrcode = CustomerController.generateQrCodeBase64(url);
+	            qrcodeBase64s.add(qrcode);
+	        } catch (Exception e) {
+	            // Handle the exception, e.g., log it or show an error message
+	            e.printStackTrace();
+	        }
+		}
+		model.addAttribute("qrcodeBase64s", qrcodeBase64s);
+    	return "store_qrcode";
+    }
+    
 }

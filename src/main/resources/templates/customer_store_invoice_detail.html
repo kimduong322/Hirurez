@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>	    
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+	
+	
+    <style type="text/css">
+    	body{
+		    margin-top:20px;
+		    background-color: #f1f3f7;
+		}
+		.card {
+		    margin-bottom: 24px;
+		    -webkit-box-shadow: 0 2px 3px #e4e8f0;
+		    box-shadow: 0 2px 3px #e4e8f0;
+		}
+		
+		.card {
+		    position: relative;
+		    display: -webkit-box;
+		    display: -ms-flexbox;
+		    display: flex;
+		    -webkit-box-orient: vertical;
+		    -webkit-box-direction: normal;
+		    -ms-flex-direction: column;
+		    flex-direction: column;
+		    min-width: 0;
+		    word-wrap: break-word;
+		    background-color: #fff;
+		    background-clip: border-box;
+		    border: 1px solid #eff0f2;
+		    border-radius: 1rem;
+		}
+		
+		.font-size-18 {
+		    font-size: 18px!important;
+		}
+		
+		a {
+		    text-decoration: none!important;
+		}
+		
+		.text-muted {
+		    --bs-text-opacity: 1;
+		    color: #7f838b!important;
+		}
+		
+		.font-size-20 {
+		    font-size: 20px!important;
+		}
+		
+		.font-size-15 {
+		    font-size: 15px!important;
+		}
+    </style>
+</head>
+<body>
+	<div th:insert="~{header :: headerAuthenticated}"></div>
+	<div class="container">
+		<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+		  <a class=" col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#" th:text="${store.name}"></a>
+		  
+		  <ul class="navbar-nav flex-row">
+	        <li class="nav-item">
+	            <a class="nav-link" href="#" th:href="@{'/customer/store/' + ${store.id} + '/table/' + ${table.id} + '/checkout'}">
+	                <svg style="font-size: 1.5rem; color: #ffff;" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 20 20">
+					  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+					</svg>
+	                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" th:text="${itemCount}">0</span>
+	            </a>
+	        </li>
+	    </ul>
+	  	</header>
+	  	
+		<div class="container-fluid">
+			<div class="row">
+				<!-- SideBar -->
+				<div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+					<div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+						<div class="offcanvas-header">
+				          <h5 class="offcanvas-title" id="sidebarMenuLabel" th:text="${store.name}"></h5>
+				          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+				        </div>
+				        
+				        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+				        	<div th:insert="~{sidebar :: customer_store_sidebar_authenticated}"></div>
+				        </div>
+					</div>
+				</div>
+			
+				<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+				        <h1 class="h2">Invoice</h1>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col-xl-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="row align-items-center">
+										<div class="table-responsive px-3">
+										
+											<table class="table table-striped align-middle table-nowrap">
+												<tbody>
+												<tr th:each="foodMenu: ${foodsInCurrentMenu}" th:unless="@{${foodMenu.quantity} == 0}">
+			                                        <td>
+			                                            <div>
+			                                                <h6 class="font-size-18"><a href="ecommerce-product-detail.html" class="text-dark" th:text="${foodMenu.food.name}"></a></h6>
+			                                                <p class="text-muted mb-0 mt-2 pt-2">
+			                                                    <i class="bx bxs-star text-warning"></i>
+			                                                    <i class="bx bxs-star text-warning"></i>
+			                                                    <i class="bx bxs-star text-warning"></i>
+			                                                    <i class="bx bxs-star text-warning"></i>
+			                                                    <i class="bx bxs-star-half text-warning"></i>
+			                                                </p>
+			                                            </div>
+			                                        </td>
+			
+			                                        <td>
+			                                            <ul class="list-unstyled ps-0 mb-0">
+			                                                <li><p class="text-muted mb-1 text-truncate" th:text="${foodMenu.food.description}"><i class="mdi mdi-circle-medium align-middle text-primary me-1"></i></p></li>
+			                                            </ul>
+			                                        </td>
+			
+			                                        <td style="width: 160px;">
+			                                      
+			                                            <div class="input-group number-spinner">
+															<span class="input-group-btn data-dwn">
+																<button class="btn btn-default btn-info" data-dir="dwn" th:id="'numberSpinner_' + ${foodMenu.id} + '_dwn'">
+																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+																	  <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+																	</svg>
+																</button>
+															</span>
+															<input th:id="@{'numberOf' + ${foodMenu.id}}" type="text" class="form-control text-center" value="1" th:attr="min=0,max=${foodMenu.quantity}">
+															<span class="input-group-btn data-up">
+																<button class="btn btn-default btn-info" data-dir="up" th:id="'numberSpinner_' + ${foodMenu.id} + '_up'">
+																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+																	  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+																	</svg>
+																</button>
+															</span>
+														</div>
+														
+														<script th:inline="javascript">
+														/*<![CDATA[*/
+														$(document).ready(function () {
+												            // Event listener for the "up" button
+												            $('#numberSpinner_'+ [[${foodMenu.id}]] + '_up').click(function () {
+												                var inputField = $('#numberOf' + [[${foodMenu.id}]]);
+												                var currentValue = parseInt(inputField.val());
+												                var maxValue = parseInt(inputField.attr('max'));
+																
+												                if (currentValue < maxValue) {
+												                    inputField.val(currentValue + 1);
+												                }
+												            
+															});
+												         	
+												            $('#numberSpinner_'+ [[${foodMenu.id}]] + '_dwn').click(function () {
+												                var inputField = $('#numberOf' + [[${foodMenu.id}]]);
+												                var currentValue = parseInt(inputField.val());
+												                var minValue = parseInt(inputField.attr('min'));
+
+												                if (currentValue > minValue) {
+												                    inputField.val(currentValue - 1);
+												                }
+												            });
+												         	
+														});
+														/*]]>*/
+														</script>
+			                                        </td>
+			
+			                                        <td style="width: 100px;">
+			                                            <h3 class="mb-0 font-size-20">
+		                                            		<b th:text="@{${foodMenu.food.price} + ' $'}"></b>
+	                                            		</h3>
+			                                        </td>
+			
+			                                        <td>
+			                                         	<button type="button" class="btn btn-primary waves-effect waves-light" th:onclick="addToCart([[${foodMenu.id}]])">
+			                                            <i class="bx bx-cart me-2 font-size-15 align-middle"></i> Add</button>
+			                                            
+			                                            <script th:inline="javascript">
+			                                            /*<![CDATA[*/
+			                                            function addToCart(foodMenuId) {
+			                                            	var quantity = $('#numberOf' + foodMenuId).val();
+			                                            	console.log(foodMenuId);
+			                                            	$.ajax({
+			                                                    type: "GET",
+			                                                    url: '/customer/invoice/' +  [[${invoice.id}]] 
+			                                            			+ '/add/foodmenu/' + foodMenuId
+			                                            			+ '/quantity/' + quantity
+			                                            			+ '/user/' + /*[[${#authentication.name}]]*/ ''
+			                                                    ,
+			                                                    success: function (response) {
+			                                                    	toastr.success('Item added to the cart successfully', 'Success', { timeOut: 2000 });
+			                                                    	// Wait for 2 seconds before reloading the page
+			                                                        setTimeout(function() {
+			                                                            location.reload();
+			                                                        }, 2000);
+
+			                                                    },
+			                                                    error: function () {
+			                                                    	toastr.error('Error adding to cart', 'Error', { timeOut: 2000 });
+			                                                        console.log('Error adding to cart');
+			                                                    }
+			                                                });
+			                                            }
+		                                            	/*]]>*/
+			                                            </script>
+			                                        </td>
+			                                    </tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</main>
+					
+			</div>
+		</div>
+		<!-- Footer -->
+		<div th:insert="~{footer :: copy}"></div>
+	</div>
+</body>
+</html>

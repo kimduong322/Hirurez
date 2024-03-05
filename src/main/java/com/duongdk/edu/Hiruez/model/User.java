@@ -25,7 +25,7 @@ public class User implements UserDetails{
     private String username;
     private String password;
     private String email;
-    private Long balance;
+    private Double balance;
     
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
@@ -55,11 +55,11 @@ public class User implements UserDetails{
 		this.email = email;
 	}
 
-	public Long getBalance() {
+	public Double getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Long balance) {
+	public void setBalance(Double balance) {
 		this.balance = balance;
 	}
 
@@ -79,7 +79,7 @@ public class User implements UserDetails{
 		super();
 	}
 
-	public User(String username, String password, String email, Long balance, UserRole role) {
+	public User(String username, String password, String email, Double balance, UserRole role) {
 		super();
 		this.username = username;
 		this.password = password;

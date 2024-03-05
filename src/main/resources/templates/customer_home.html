@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Home</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <style>
+		.product-grid3{font-family:Roboto,sans-serif;text-align:center;position:relative;z-index:1}
+		.product-grid3:before{content:"";height:81%;width:100%;background:#fff;border:1px solid rgba(0,0,0,.1);opacity:0;position:absolute;top:0;left:0;z-index:-1;transition:all .5s ease 0s}
+		.product-grid3:hover:before{opacity:1;height:100%}
+		.product-grid3 .product-image3{position:relative}
+		.product-grid3 .product-image3 a{display:block}
+		.product-grid3 .product-image3 img{width:100%;height:auto}
+		.product-grid3 .pic-1{opacity:1;transition:all .5s ease-out 0s}
+		.product-grid3:hover .pic-1{opacity:0}
+		.product-grid3 .pic-2{position:absolute;top:0;left:0;opacity:0;transition:all .5s ease-out 0s}
+		.product-grid3:hover .pic-2{opacity:1}
+		.product-grid3 .social{width:120px;padding:0;margin:0 auto;list-style:none;opacity:0;position:absolute;right:0;left:0;bottom:-23px;transform:scale(0);transition:all .3s ease 0s}
+		.product-grid3:hover .social{opacity:1;transform:scale(1)}
+		.product-grid3:hover .product-discount-label,.product-grid3:hover .product-new-label,.product-grid3:hover .title{opacity:0}
+		.product-grid3 .social li{display:inline-block}
+		.product-grid3 .social li a{color:#e67e22;background:#fff;font-size:18px;line-height:50px;width:50px;height:50px;border:1px solid rgba(0,0,0,.1);border-radius:50%;margin:0 2px;display:block;transition:all .3s ease 0s}
+		.product-grid3 .social li a:hover{background:#e67e22;color:#fff}
+		.product-grid3 .product-discount-label,.product-grid3 .product-new-label{background-color:#e67e22;color:#fff;font-size:17px;padding:2px 10px;position:absolute;right:10px;top:10px;transition:all .3s}
+		.product-grid3 .product-content{z-index:-1;padding:15px;text-align:left}
+		.product-grid3 .title{font-size:14px;text-transform:capitalize;margin:0 0 7px;transition:all .3s ease 0s}
+		.product-grid3 .title a{color:#414141}
+		.product-grid3 .price{color:#000;font-size:16px;letter-spacing:1px;font-weight:600;margin-right:2px;display:inline-block}
+		.product-grid3 .price span{color:#909090;font-size:14px;font-weight:500;letter-spacing:0;text-decoration:line-through;text-align:left;display:inline-block;margin-top:-2px}
+		.product-grid3 .rating{padding:0;margin:-22px 0 0;list-style:none;text-align:right;display:block}
+		.product-grid3 .rating li{color:#ffd200;font-size:13px;display:inline-block}
+		.product-grid3 .rating li.disable{color:#dcdcdc}
+		@media only screen and (max-width:1200px){.product-grid3 .rating{margin:0}
+		}
+		@media only screen and (max-width:990px){.product-grid3{margin-bottom:30px}
+		.product-grid3 .rating{margin:-22px 0 0}
+		}
+		@media only screen and (max-width:359px){.product-grid3 .rating{margin:0}
+		}
+	</style>
+</head>
+<body>
+	<div th:insert="~{header :: headerAuthenticated}"></div>
+	<div class="container">
+	    <h3 class="h3">The popular store </h3>
+	    <div class="row">
+	        <div th:each="store: ${stores}" class="col-md-3 col-sm-6">
+	            <div class="product-grid3">
+	                <div class="product-image3">
+	                    <a href="#">
+	                        <img class="pic-1" th:src="@{/images/store1.jpg}">
+	                        <img class="pic-2" th:src="@{/images/store2.jpg}">
+	                    </a>
+	                    <ul class="social">
+	                        <li><a th:href="@{'/customer/store/' + ${store.id} + '/table'}">
+	                        	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+								  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+								  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+								</svg>
+	                        </a></li>
+	                    </ul>
+	                    <span class="product-new-label">Yêu thích +</span>
+	                </div>
+	                <div class="product-content">
+	                    <h3 class="title"><a href="#" th:text="${store.name}"></a></h3>
+	                    <div class="price" th:text="${store.owner.username}">
+	                    </div>
+	                    
+	                    <div>
+	                    	<span th:text="${store.description}"></span>
+	                    </div>
+	                    <div>
+	                    	<ul class="rating">
+		                        <li class="fa fa-star"></li>
+		                        <li class="fa fa-star"></li>
+		                        <li class="fa fa-star"></li>
+		                        <li class="fa fa-star disable"></li>
+		                        <li class="fa fa-star disable"></li>
+		                    </ul>
+	                    </div>
+	                </div>
+	            </div>     
+	        </div>
+	    </div>
+	    
+	    <!-- Footer -->
+		<div th:insert="~{footer :: copy}"></div>
+	</div>
+</body>
+</html>

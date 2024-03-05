@@ -1,0 +1,166 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${store.name}"></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <style>
+    	body{
+		    margin-top:20px;
+		    background:#eee;
+		}
+		.ui-w-40 {
+		    width: 40px !important;
+		    height: auto;
+		}
+		
+		.card{
+		    box-shadow: 0 1px 15px 1px rgba(52,40,104,.08);    
+		}
+		
+		.ui-product-color {
+		    display: inline-block;
+		    overflow: hidden;
+		    margin: .144em;
+		    width: .875rem;
+		    height: .875rem;
+		    border-radius: 10rem;
+		    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+		    box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+		    vertical-align: middle;
+		}
+    </style>
+</head>
+<body>
+	<div th:insert="~{header :: headerAuthenticated}"></div>
+	<div class="container">
+		<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+		  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#" th:text="${store.name}"></a>
+	  	</header>
+	  	
+	  	<div class="container-fluid">
+	  		<div class="row">
+	  			<!-- SideBar -->
+				<div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+					<div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+						<div class="offcanvas-header">
+				          <h5 class="offcanvas-title" id="sidebarMenuLabel" th:text="${store.name}"></h5>
+				          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+				        </div>
+				        
+				        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+				        	<div th:insert="~{sidebar :: customer_store_sidebar_authenticated}"></div>
+				        </div>
+					</div>
+				</div>
+				
+				<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+				        <h1 class="h2">Checkout in store: [[${store.name}]]</h1>
+			        </div>
+			        
+			        <div class="row">
+			        	<table class="table table-bordered m-0">
+				        	<thead>
+			                  <tr>
+			                    <!-- Set columns width -->
+			                    <th class="text-center py-3 px-4" style="min-width: 400px;">Product Name &amp; Details</th>
+			                    <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
+			                    <th class="text-center py-3 px-4" style="width: 120px;">Quantity</th>
+			                    <th class="text-right py-3 px-4" style="width: 100px;">Total</th>
+			                    <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="" data-original-title="Clear cart"><i class="ino ion-md-trash"></i></a></th>
+			                  </tr>
+			                </thead>
+			                <tbody>
+			                	<tr th:each="item, index: ${items}">
+			                		<td class="p-4">
+				                      <div class="media align-items-center">
+				                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="d-block ui-w-40 ui-bordered mr-4" alt="">
+				                        <div class="media-body">
+				                          <a href="#" class="d-block text-dark" th:text="${item.food.name}"></a>
+				                          <small>
+				                            <span class="text-muted" th:text="${item.food.description}"></span>
+				                            <br>
+				                            <span class="text-muted" th:text="@{'Ordered By: ' + ${item.byUser.username}}" ></span>
+				                          </small>
+				                        </div>
+				                      </div>
+				                    </td>
+				                    <td class="text-right font-weight-semibold align-middle p-4" th:text="@{'$ ' + ${item.food.price}}"></td>
+				                    <td class="align-middle p-4"><input type="text" class="form-control text-center" th:value="${item.quantity}" readonly></td>
+				                    <td class="text-right font-weight-semibold align-middle p-4" th:text="@{'$ ' + ${totalforEachItem[index.index]}}"></td>
+				                    <td class="text-center align-middle px-0">
+				                    	<button th:onclick="removeToCart([[${item.id}]])" class="shop-tooltip close float-none text-danger" data-original-title="Remove">×</button>
+				                    	<script th:inline="javascript">
+				                    	/*<![CDATA[*/
+				                    		function removeToCart(foodMenuId) {
+					                    		var invoiceId = [[${invoice.id}]];
+					                    		$.ajax({
+			                    			 		type: "GET",
+                                                    url: '/customer/invoice/' +  [[${invoice.id}]] 
+                                            			+ '/remove/foodmenu/' + foodMenuId
+                                                    ,
+                                                    success: function (response) {
+                                                    	toastr.success('Remove to the cart successfully', 'Success', { timeOut: 2000 });
+                                                    	// Wait for 2 seconds before reloading the page
+                                                        setTimeout(function() {
+                                                            location.reload();
+                                                        }, 2000);
+
+                                                    },
+                                                    error: function () {
+                                                    	toastr.error('Error removing to cart', 'Error', { timeOut: 2000 });
+                                                    }
+					                    		});
+					                    	}
+				                    	/*]]>*/
+				                    	</script>
+			                    	</td>
+			                	</tr>
+			                </tbody>
+			        	</table>
+			        </div>
+			        
+			        <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+		              <div class="d-flex">
+		                <div class="text-right mt-4 mr-5">
+		                  <label class="text-muted font-weight-normal m-0">Discount</label>
+		                  <div class="text-large"><strong>$0</strong></div>
+		                </div>
+		                <div class="text-right mt-4">
+		                  <label class="text-muted font-weight-normal m-0">Total price</label>
+		                  <div class="text-large"><strong th:text="@{'$ ' + ${totalPrice}}"></strong></div>
+		                </div>
+		              </div>
+		            </div>
+		        
+		            <div class="float-right">
+		              <button id="backToShopping" type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3">Back to shopping</button>
+		              <script th:inline="javascript">
+		              	$(document).ready(function() {
+		              		$('#backToShopping').click(function() {
+		              			var storeId = [[${store.id}]];
+		              			var tableId = [[${table.id}]];
+		              			
+		              			window.location.href = "/customer/store/" + storeId + "/table/" + tableId + "/invoice/detail";
+		              		});
+		              	});
+		              </script>
+		              <button th:if="${#authentication.name == invoice.createdByUser.username}"
+					        type="button" class="btn btn-lg btn-primary mt-2">Checkout</button>
+					
+					  <button th:unless="${#authentication.name == invoice.createdByUser.username}"
+					        type="button" class="btn btn-lg btn-warning mt-2">Waiting Checkout</button>
+		            </div>
+				</main>
+			</div>
+		</div>
+		
+		<!-- Footer -->
+		<div th:insert="~{footer :: copy}"></div>
+	</div>
+</body>
+</html>
