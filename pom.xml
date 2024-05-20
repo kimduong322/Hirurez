@@ -12,6 +12,7 @@
 	<artifactId>Hiruez</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
+	<packaging>jar</packaging>
 	<name>Hiruez</name>
 	<description>QRcode-based restaurants market</description>
 	<properties>
