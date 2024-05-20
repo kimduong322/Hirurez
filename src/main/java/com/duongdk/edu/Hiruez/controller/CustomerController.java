@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.duongdk.edu.Hiruez.Utils.CurrentUserUtil;
+import com.duongdk.edu.Hiruez.Utils.QrcodeConfiguration;
 import com.duongdk.edu.Hiruez.model.FoodMenu;
 import com.duongdk.edu.Hiruez.model.Invoice;
 import com.duongdk.edu.Hiruez.model.InvoiceItem;
@@ -32,7 +34,6 @@ import com.duongdk.edu.Hiruez.model.Menu;
 import com.duongdk.edu.Hiruez.model.Store;
 import com.duongdk.edu.Hiruez.model.Table;
 import com.duongdk.edu.Hiruez.model.User;
-import com.duongdk.edu.Hiruez.qrcodeUtils.QrcodeConfiguration;
 import com.duongdk.edu.Hiruez.repository.FoodItemRepository;
 import com.duongdk.edu.Hiruez.repository.FoodMenuRepository;
 import com.duongdk.edu.Hiruez.repository.InvoiceItemRepository;
@@ -49,6 +50,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 
 @Controller
 public class CustomerController {
+	private Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
 	@Autowired private StoreRepository storeRepository;
 	
@@ -238,8 +240,11 @@ public class CustomerController {
 	
 	@GetMapping("/")
 	public String getHomePage2(Model model) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User curUser = userRepository.findByUsername(authentication.getName());
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		UserDetails curUserDetails = CurrentUserUtil.getCurrentUserDetails();
+		logger.info("Current user: {}", curUser);
+		logger.info("Current user details: {}", curUserDetails.getUsername());
+
 		model.addAttribute("currentUser", curUser);
 
 		// get list of only 5 stores with highest by rating decreasing

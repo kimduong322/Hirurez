@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.duongdk.edu.Hiruez.Utils.QrcodeConfiguration;
 import com.duongdk.edu.Hiruez.model.FoodItem;
 import com.duongdk.edu.Hiruez.model.FoodMenu;
 import com.duongdk.edu.Hiruez.model.Menu;
@@ -23,7 +24,6 @@ import com.duongdk.edu.Hiruez.model.OrderItem;
 import com.duongdk.edu.Hiruez.model.Payment;
 import com.duongdk.edu.Hiruez.model.Store;
 import com.duongdk.edu.Hiruez.model.Table;
-import com.duongdk.edu.Hiruez.qrcodeUtils.QrcodeConfiguration;
 import com.duongdk.edu.Hiruez.repository.FoodMenuRepository;
 import com.duongdk.edu.Hiruez.repository.MenuRepository;
 import com.duongdk.edu.Hiruez.repository.OrderItemRepository;

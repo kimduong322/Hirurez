@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodScan | Sign up</title>
+    <!-- bootstrap css-->
+    <link rel="stylesheet" type="text/css" id="rtl-link" th:href="@{/css/vendors/bootstrap.css}">
+
+    <!-- swiper css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/swiper-bundle.min.css}">
+
+    <!-- remixicon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/remixicon.css}">
+
+    <!-- theme css-->
+    <link rel="stylesheet" id="change-link" type="text/css" th:href="@{/css/style.css}">
+
+</head>
+
+<body class="white-bg">
+    <!-- Header section start -->
+    <header>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg p-0">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvasNavbar">
+                    <span class="navbar-toggler-icon">
+                        <i class="ri-menu-line"></i>
+                    </span>
+                </button>
+    
+                <a th:href="@{'/'}">
+                    <img class="img-fluid logo" th:src="@{/images/hiruez_logo.jpg}" alt="logo">
+                </a>
+                <a target="_blank" data-bs-toggle="modal" data-bs-target="#location"
+                    class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
+                    <i class="ri-map-pin-line"></i> Location
+                </a>
+    
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                        <button class="navbar-toggler btn-close" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#offcanvasNavbar" data-bs-dismiss="offcanvas">
+                        </button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-center flex-grow-1">
+                            <ul class="navbar-nav justify-content-center flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{'/'}">Home</a>
+                                </li>
+    
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
+                                        data-bs-toggle="toggle" aria-expanded="false">Restaurants</a>
+                                </li>
+    
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
+                                        data-bs-toggle="toggle" aria-expanded="false">Shorts</a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- Header section end-->
+
+    <!-- page head section starts -->
+    <section class="page-head-section">
+        <div class="container page-heading">
+            <h2 class="h3 mb-3 text-white text-center">Create Account</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/}"><i class="ri-home-line"></i>Home</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Signup</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+    <!-- page head section end -->
+
+    <!-- signup section start -->
+    <section class="login-hero-section section-b-space">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="col-xl-5 col-lg-6 col-md-10 m-auto">
+                        <div class="login-data">
+                            <form class="auth-form" th:action="@{/registration}" th:object="${user}" method="post">
+                                <h2>Sign up</h2>
+                                <h5>
+                                    or
+                                    <a th:href="@{/login}"><span class="theme-color">login to your account</span></a>
+                                </h5>
+
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+                                </div>
+
+                                <div class="form-input">
+                                    <input type="text" id="username" class="form-control" placeholder="Enter your name" th:field="*{username}" required>
+                                    <i class="ri-user-3-line"></i>
+                                </div>
+
+                                <div class="form-input">
+                                    <input type="email" id="email" class="form-control" placeholder="Enter your email" th:field="*{email}" required>
+                                    <i class="ri-mail-line"></i>
+                                </div>
+
+                                <div class="form-input">
+                                    <input type="password" id="password" class="form-control" placeholder="Enter your password" th:field="*{password}" required>
+                                    <i class="ri-lock-password-line"></i>
+                                </div>
+
+                                <button type="submit" class="btn theme-btn submit-btn w-100 rounded-2">CONTINUE</button>
+                                <p class="fw-normal content-color">
+                                    By creating an account, I accept the
+                                    <span class="fw-semibold">
+                                        Terms & Conditions & Privacy Policy</span>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- signup section end-->
+
+    <!-- footer begin-->
+    <footer class="footer-section section-t-space">
+        <div class="container">
+            <div class="main-footer">
+                <div class="bottom-footer-part">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <h6>@ Copyright 2024 DuongDK. </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer end-->
+    <!-- responsive space -->
+    <div class="responsive-space"></div>
+    <!-- responsive space -->
+
+    <!-- bootstrap js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    
+    <!-- footer accordion js -->
+    <script th:src="@{/js/footer-accordion.js}"></script>
+    
+    <!-- loader js -->
+    <script th:src="@{/js/loader.js}"></script>
+    
+    <!-- swiper js -->
+    <script th:src="@{/js/swiper-bundle.min.js}"></script>
+    <script th:src="@{/js/custom-swiper.js}"></script>
+    
+    <!-- menu offcanvas js -->
+    <script th:src="@{/js/menu-offcanvas.js}"></script>
+    
+    <!-- script js -->
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

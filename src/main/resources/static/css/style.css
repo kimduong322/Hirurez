@@ -1,11 +1,4 @@
 /*-----------------------------------------------------------------------------------
-
-    Template Name:zomo - Online Food Delivery
-    Template URI: https://themes.pixelstrap.net/zomo
-    Description: This is Food Ordering Html Template
-    Author: Pixelstrap
-    Author URL: https://themeforest.net/user/pixelstrap
-
 ----------------------------------------------------------------------------------- */
 /* 1.1 animation CSS  */
 /* 1.2 variable CSS  */
@@ -4636,7 +4629,7 @@ li {
 }
 .page-head-section::before {
   content: "";
-  background-image: url(../../../../themes.pixelstrap.com/zomo-app-landing/assets/images/background/home-bg.jpg);
+  background-image: url(../images/background/home-bg.jpg);
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;

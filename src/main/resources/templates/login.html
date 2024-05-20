@@ -1,137 +1,171 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <title>Login</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <style>
-        	html,
-			body {
-			  height: 100%;
-			}
-			
-			.form-signin {
-			  max-width: 330px;
-			  padding: 1rem;
-			}
-			
-			.form-signin .form-floating:focus-within {
-			  z-index: 2;
-			}
-			
-			.form-signin input[type="email"] {
-			  margin-bottom: -1px;
-			  border-bottom-right-radius: 0;
-			  border-bottom-left-radius: 0;
-			}
-			
-			.form-signin input[type="password"] {
-			  margin-bottom: 10px;
-			  border-top-left-radius: 0;
-			  border-top-right-radius: 0;
-			}
-			.bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodScan | Login</title>
+    <!-- bootstrap css-->
+    <link rel="stylesheet" type="text/css" id="rtl-link" th:href="@{/css/vendors/bootstrap.css}">
+    
+    <!-- remixicon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/remixicon.css}">
+    
+    <!-- theme css-->
+    <link rel="stylesheet" id="change-link" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body class="white-bg">
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
+    <!-- Header section start -->
+    <header>
+      <div class="container">
+        <nav class="navbar navbar-expand-lg p-0">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvasNavbar">
+            <span class="navbar-toggler-icon">
+              <i class="ri-menu-line"></i>
+            </span>
+          </button>
+    
+          <a th:href="@{'/'}">
+            <img class="img-fluid logo" th:src="@{/images/hiruez_logo.jpg}" alt="logo">
+          </a>
+          <a target="_blank" data-bs-toggle="modal" data-bs-target="#location"
+            class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
+            <i class="ri-map-pin-line"></i> Location
+          </a>
+    
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+              <button class="navbar-toggler btn-close" type="button" data-bs-toggle="collapse"
+                data-bs-target="#offcanvasNavbar" data-bs-dismiss="offcanvas">
+              </button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-center flex-grow-1">
+                <ul class="navbar-nav justify-content-center flex-grow-1">
+                  <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/'}">Home</a>
+                  </li>
+    
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button" data-bs-toggle="toggle"
+                      aria-expanded="false">Restaurants</a>
+                  </li>
+    
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button" data-bs-toggle="toggle"
+                      aria-expanded="false">Shorts</a>
+                  </li>
+                </ul>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- Header section end-->
 
-      .b-example-divider {
-        width: 100%;
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-      }
+    <!-- page head section starts -->
+    <section class="page-head-section">
+      <div class="container page-heading">
+        <h2 class="h3 mb-3 text-white text-center">Login</h2>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item">
+              <a th:href="@{/}"><i class="ri-home-line"></i>Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Login</li>
+          </ol>
+        </nav>
+      </div>
+    </section>
+    <!-- page head section end -->
 
-      .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 100vh;
-      }
-
-      .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-      }
-
-      .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-      }
-
-      .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .btn-bd-primary {
-        --bd-violet-bg: #712cf9;
-        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-        --bs-btn-font-weight: 600;
-        --bs-btn-color: var(--bs-white);
-        --bs-btn-bg: var(--bd-violet-bg);
-        --bs-btn-border-color: var(--bd-violet-bg);
-        --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #6528e0;
-        --bs-btn-hover-border-color: #6528e0;
-        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-        --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #5a23c8;
-        --bs-btn-active-border-color: #5a23c8;
-      }
-
-      .bd-mode-toggle {
-        z-index: 1500;
-      }
-
-      .bd-mode-toggle .dropdown-menu .active .bi {
-        display: block !important;
-      }
-        </style>
-    </head>
-    <body>
-        <div th:if="${param.error}">
-            Invalid username and password.
+    <!-- signin page start-->
+    <section class="login-hero-section section-b-space">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-5 col-lg-6 col-md-10 m-auto">
+          	
+            <div class="login-data">
+              <main>
+              <form class="auth-form" th:action="@{/login}" th:method="post" role="form">
+                <h2>Sign in</h2>
+                <h5>
+                  or
+                  <a th:href="@{/registration}"><span class="theme-color">create an a account</span></a>
+                </h5>
+                <div th:if="${registerSuccess}">
+                  <h2 th:text="${'Welcome ' + name + ' ^^'}"></h2>
+                </div>
+                <div th:if="${registerSuccess}" class="alert alert-success" role="alert">
+                  <p th:text="${registerSuccess}"></p>
+                </div>
+                <!-- Add error message div here -->
+                <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                  Invalid username/email or password.
+                </div>
+                <!-- Add logout success message div here -->
+                <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                  You have been logged out successfully.
+                </div>
+                <div class="form-input form-floating">
+                  <input id="emailInput" type="email" name="username" class="form-control" placeholder="Enter your email or user name">
+                  <i class="ri-user-line"></i>
+                </div>
+                <div class="form-input form-floating">
+                  <input id="passwordInput" type="password" name="password" class="form-control" placeholder="Enter your password">
+                  <i class="ri-lock-password-line"></i>
+                </div>
+                <button type="submit"  class="btn theme-btn submit-btn w-100 rounded-2">CONTINUE</button>
+                <p class="fw-normal content-color">
+                  By creating an account, I accept the
+                  <span class="fw-semibold">
+                    Terms & Conditions & Privacy Policy</span>
+                </p>
+              </form>
+              </main>
+            </div>
+          </div>
         </div>
-        <div th:if="${param.logout}">
-            You have been logged out.
+      </div>
+    </section>
+    <!-- signin page end-->
+
+    <!-- footer begin-->
+    <footer class="footer-section section-t-space">
+      <div class="container">
+        <div class="main-footer">
+          <div class="bottom-footer-part">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h6>@ Copyright 2024 DuongDK. </h6>
+            </div>
+          </div>
         </div>
-        <main class="form-signin w-100 m-auto">
-        <form th:action="@{/login}" method="post">
-        	<!-- Logo -->
-	        <img class="mb-4 bi" th:src="@{/images/hiruez_logo.jpg}" width="216" height="62">
-	        <h1 class="h3 mb-3 fw-normal">Please sign in to Hiruez</h1>
-	        
-            <div class="form-floating">
-            	<input class="form-control" id="floatingInput" type="text" name="username" placeholder="username1234"/>
-            	<label for="floatingInput"> User Name </label>
-            </div>
-            <div class="form-floating">
-            	<input class="form-control" id="floatingPassword" type="password" name="password" placeholder="Password"/>
-            	<label for="floatingPassword">Password</label>
-            </div>
-            <div>
-            	<input class="btn btn-primary w-100 py-2" type="submit" value="Sign In"/>
-            </div>
-        </form>
-        </main>
-    </body>
+      </div>
+    </footer>
+    <!-- footer end-->
+    <!-- responsive space -->
+    <div class="responsive-space"></div>
+    <!-- responsive space -->
+
+    <!-- bootstrap js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- footer accordion js -->
+    <script th:src="@{/js/footer-accordion.js}"></script>
+
+    <!-- loader js -->
+    <script th:src="@{/js/loader.js}"></script>
+
+    <!-- swiper js -->
+    <script th:src="@{/js/swiper-bundle.min.js}"></script>
+    <script th:src="@{/js/custom-swiper.js}"></script>
+
+    <!-- menu offcanvas js -->
+    <script th:src="@{/js/menu-offcanvas.js}"></script>
+
+    <!-- script js -->
+    <script th:src="@{/js/script.js}"></script>
+</body>
 </html>
