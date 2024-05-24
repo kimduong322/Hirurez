@@ -31,9 +31,10 @@
                     <a th:href="@{'/'}">
                         <img class="img-fluid logo" th:src="@{/images/hiruez_logo.svg}" alt="logo">
                     </a>
-                    <a target="_blank" data-bs-toggle="modal" data-bs-target="#location"
+                    <a data-bs-toggle="modal" data-bs-target="#location"
+                        th:href="@{'/depositMoney'}"
                         class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
-                        <i class="ri-map-pin-line"></i> Location
+                        Loading...<i class="ri-add-line"></i>
                     </a>
                     <div class="nav-option order-md-2">
                         <div class="dropdown-button">
@@ -46,7 +47,7 @@
                             <img class="img-fluid profile-pic" th:src="${'/images/avatars/' + currentUser.id + '.png'}" alt="profile">
                             <div>
                                 <h6 class="fw-normal" th:text="${'Hi, ' + #authentication.name}"></h6> <!--Hi+Name-->
-                                <h5 class="fw-medium" th:text="${'Balance ' + currentUser.balance + ' $'}"></h5> <!--balance-->
+                                <h5 class="fw-medium" >Have a good day!</h5> <!--balance-->
                             </div>
                         </div>
                     </div>
@@ -85,7 +86,7 @@
                 <div class="loader-gif">
                     <img th:src="@{/images/gif/food.gif}" alt="food-gif" class="img-fluid">
                 </div>
-                <h2>Searching the most delicious dish in your area...</h2>
+                <h2>Searching the most delicious dish in Ha Noi...</h2>
             </div>
         </section>
         <section class="categories-section section-b-space">
@@ -145,9 +146,9 @@
                 <a th:href="@{'/'}">
                     <img class="img-fluid logo" th:src="@{/images/hiruez_logo.jpg}" alt="logo">
                 </a>
-                <a target="_blank" data-bs-toggle="modal" data-bs-target="#location"
+                <a th:href="@{'/depositMoney'}"
                     class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
-                    <i class="ri-map-pin-line"></i> Location
+                    <span th:text="${currentUser.balance + ' VND'}"></span><i class="ri-add-line"></i>
                 </a>
                 
                 <!-- Cart Section-->
@@ -179,7 +180,7 @@
                         <img class="img-fluid profile-pic" th:src="${'/images/avatars/' + currentUser.id + '.png'}" alt="profile">
                         <div>
                             <h6 class="fw-normal" th:text="${'Hi, ' + #authentication.name}"></h6> <!--Hi+Name-->
-                            <h5 class="fw-medium" th:text="${'Balance ' + currentUser.balance + ' $'}"></h5> <!--balance-->
+                            <h5 class="fw-medium">Have a good day!</h5> <!--balance-->
                         </div>
                         <div class="onhover-box onhover-sm">
                             <ul class="menu-list">
@@ -196,7 +197,7 @@
                             </ul>
                             <div>
                                 <form th:action="@{/logout}" method="post">
-                                    <button type="submit" class="logout-button">
+                                    <button type="submit" class="logout-button btn btn-inline">
                                         <i class="ri-login-box-line me-2"></i>
                                         Logout
                                     </button>
@@ -249,7 +250,7 @@
         </div>
         <div class="container text-center position-relative">
            <h1>FoodScan</h1>
-           <h2>Searching the most delicious dish in your area...</h2>
+           <h2>Searching the most delicious dish in Ha Noi...</h2>
            <div class="search-section">
                 <form class="auth-form search-head" target="_blank">
                     <div class="form-group">
@@ -338,7 +339,7 @@
                 </a>
             </li>
             <li>
-                <a th:href="@{/}" class="menu-box">
+                <a th:href="@{'/profile'}" class="menu-box">
                     <i class="ri-user-line"></i>
                     <span>Profile</span>
                 </a>

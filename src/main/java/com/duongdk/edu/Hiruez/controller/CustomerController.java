@@ -6,27 +6,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.duongdk.edu.Hiruez.Utils.CurrentUserUtil;
 import com.duongdk.edu.Hiruez.Utils.QrcodeConfiguration;
@@ -37,7 +29,7 @@ import com.duongdk.edu.Hiruez.model.Menu;
 import com.duongdk.edu.Hiruez.model.Store;
 import com.duongdk.edu.Hiruez.model.Table;
 import com.duongdk.edu.Hiruez.model.User;
-import com.duongdk.edu.Hiruez.repository.FoodItemRepository;
+import com.duongdk.edu.Hiruez.model.DepositMoneyPayment;
 import com.duongdk.edu.Hiruez.repository.FoodMenuRepository;
 import com.duongdk.edu.Hiruez.repository.InvoiceItemRepository;
 import com.duongdk.edu.Hiruez.repository.InvoiceRepository;
@@ -45,11 +37,16 @@ import com.duongdk.edu.Hiruez.repository.MenuRepository;
 import com.duongdk.edu.Hiruez.repository.StoreRepository;
 import com.duongdk.edu.Hiruez.repository.TableRepository;
 import com.duongdk.edu.Hiruez.repository.UserRepository;
+import com.duongdk.edu.Hiruez.repository.DepositMoneyPaymentRepository;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+
+import com.duongdk.edu.Hiruez.service.VnPayService;
 
 @Controller
 public class CustomerController {
@@ -69,9 +66,11 @@ public class CustomerController {
 	
 	@Autowired private FoodMenuRepository foodMenuRepository;
 	
-	@Autowired private FoodItemRepository foodItemRepository;
-	
 	@Autowired private UserRepository userRepository;
+
+	@Autowired private VnPayService vnPayService;
+
+	@Autowired private DepositMoneyPaymentRepository depositMoneyPaymentRepository;
 	
 	@GetMapping("/customer/home")
 	public String getHomePage(Model model) {
@@ -256,4 +255,44 @@ public class CustomerController {
 		return "index";
 	}
 	
+	@GetMapping("/depositMoney")
+	public String getDepositMoneyForm(Model model) {
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("currentUser", curUser);
+		return "deposit_money_page";
+	}
+
+	@PostMapping("/depositMoney")
+	public String submitDepositMoneyForm(@RequestParam("amount") int orderTotal,
+                            @RequestParam("orderInfo") String orderInfo,
+                            HttpServletRequest request) {
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		String vnpayUrl = vnPayService.createOrder(request, orderTotal, orderInfo, baseUrl);
+		
+		return "redirect:" + vnpayUrl;
+	}
+
+	@GetMapping("/profile")
+	public String getProfilePage(Model model) {
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("curUser", curUser);
+		
+		return "profile";
+	}
+
+	@GetMapping("/my-payment")
+	public String getMyPaymentPage(Model model) {
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("curUser", curUser);
+		List<DepositMoneyPayment> payments = depositMoneyPaymentRepository.findByUserIdOrderByUserIdDesc(curUser.getId());
+		model.addAttribute("payments", payments);
+		return "my_payment";
+	}
+
+	@GetMapping("/setting")
+	public String getSettingPage(Model model) {
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("curUser", curUser);
+		return "user_setting";
+	}
 }

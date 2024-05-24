@@ -28,9 +28,9 @@
           <a th:href="@{'/'}">
             <img class="img-fluid logo" th:src="@{/images/hiruez_logo.jpg}" alt="logo">
           </a>
-          <a target="_blank" data-bs-toggle="modal" data-bs-target="#location"
+          <a th:href="@{'/depositMoney'}"
             class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
-            <i class="ri-map-pin-line"></i> Location
+            0.0 VND<i class="ri-add-line"></i>
           </a>
     
           <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
@@ -107,7 +107,7 @@
                 </div>
                 <!-- Add logout success message div here -->
                 <div th:if="${param.logout}" class="alert alert-success" role="alert">
-                  You have been logged out successfully.
+                  Successfully.
                 </div>
                 <div class="form-input form-floating">
                   <input id="emailInput" type="email" name="username" class="form-control" placeholder="Enter your email or user name">

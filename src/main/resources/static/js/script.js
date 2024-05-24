@@ -296,4 +296,3 @@ function setDark() {
   themeIcon.classList.add(moon);
   themeIcon.classList.remove(sun);
 }
-
