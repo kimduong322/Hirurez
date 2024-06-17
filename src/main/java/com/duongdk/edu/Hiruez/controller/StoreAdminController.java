@@ -9,24 +9,33 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.duongdk.edu.Hiruez.Utils.CurrentUserUtil;
 import com.duongdk.edu.Hiruez.Utils.QrcodeConfiguration;
 import com.duongdk.edu.Hiruez.model.FoodItem;
 import com.duongdk.edu.Hiruez.model.FoodMenu;
+import com.duongdk.edu.Hiruez.model.Invoice;
+import com.duongdk.edu.Hiruez.model.InvoiceLog;
 import com.duongdk.edu.Hiruez.model.Menu;
 import com.duongdk.edu.Hiruez.model.Order;
 import com.duongdk.edu.Hiruez.model.OrderItem;
 import com.duongdk.edu.Hiruez.model.Payment;
 import com.duongdk.edu.Hiruez.model.Store;
 import com.duongdk.edu.Hiruez.model.Table;
+import com.duongdk.edu.Hiruez.model.User;
 import com.duongdk.edu.Hiruez.repository.FoodMenuRepository;
+import com.duongdk.edu.Hiruez.repository.InvoiceLogRepository;
+import com.duongdk.edu.Hiruez.repository.InvoiceRepository;
 import com.duongdk.edu.Hiruez.repository.MenuRepository;
 import com.duongdk.edu.Hiruez.repository.OrderItemRepository;
+import com.duongdk.edu.Hiruez.repository.OrderRepository;
 import com.duongdk.edu.Hiruez.repository.PaymentRepository;
 import com.duongdk.edu.Hiruez.repository.TableRepository;
 import com.duongdk.edu.Hiruez.service.FoodItemService;
@@ -64,6 +73,12 @@ public class StoreAdminController {
 	@Autowired private OrderItemRepository orderItemRepository;
 	
 	@Autowired private QrcodeConfiguration qrcodeConfiguration;
+
+	@Autowired private OrderRepository orderRepository;
+
+	@Autowired private InvoiceRepository invoiceRepository;
+
+	@Autowired private InvoiceLogRepository invoiceLogRepository;
 	
 	@GetMapping("/storemanagement/dashboard/{username}")
 	public String getStoreDashboard(@PathVariable String username, Model model) {
@@ -74,12 +89,29 @@ public class StoreAdminController {
 	    LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(30);
 
-        List<Payment> actualPayments = paymentRepository.findByPaymentTimeBetweenAndOrderOnTableBelongsToStoreId(startDate, endDate, 1L); //future replace 1 to storeId 
+        List<Payment> actualPayments = paymentRepository.findByPaymentTimeBetweenAndOrderOnTableBelongsToStoreId(startDate, endDate, store.getId());
+
+		List<Payment> paymentsByDate = new ArrayList<Payment>();
+		
+		for (Payment payment : actualPayments) {
+			int check = 0;
+			for (Payment p2 : paymentsByDate) {
+				if (p2.getPaymentTime().toLocalDate().equals(payment.getPaymentTime().toLocalDate())) {
+					p2.setAmount(p2.getAmount() + payment.getAmount());
+					check = 1;
+					break;
+				}
+			}
+			if (check == 0) {
+				paymentsByDate.add(payment);
+			}
+		}
+
      // Generate default payment values for the last 30 days
-        List<Payment> defaultPayments = generateDefaultPayments(startDate, endDate, 1L, actualPayments);
+        List<Payment> defaultPayments = generateDefaultPayments(startDate, endDate, store.getId(), actualPayments);
 
         // Combine actual and default payments
-        List<Payment> combinedPayments = combinePayments(actualPayments, defaultPayments);
+        List<Payment> combinedPayments = combinePayments(paymentsByDate, defaultPayments);
         
         model.addAttribute("payments", combinedPayments);
         model.addAttribute("storeId", 1);
@@ -273,12 +305,27 @@ public class StoreAdminController {
 	    model.addAttribute("store", store);
 	    List<Table> tables = tableRepository.findByBelongsToStore(store);
 	    List<Order> orders = new ArrayList<>();
+		List<Order> ordersConfirmed = new ArrayList<>();
+		List<Order> ordersDelivered = new ArrayList<>();
 	    for(Table table: tables) {
 	    	List<Order> tableOrders = orderService.getOrdersByTable(table);
-	    	orders.addAll(tableOrders);
+			for (Order order : tableOrders) {
+				if (order.getStatus().equals("PAID")) {
+					orders.add(order);
+				} else if (order.getStatus().equals("CONFIRMED")) {
+					ordersConfirmed.add(order);
+				} else if (order.getStatus().equals("DELIVERED")) {
+					ordersDelivered.add(order);
+				}
+			}
 	    }
-	    Collections.sort(orders, Comparator.comparing(Order::getOrderTime).reversed());
+	    Collections.sort(orders, Comparator.comparing(Order::getOrderTime));
 	    model.addAttribute("orders", orders);
+		Collections.sort(ordersConfirmed, Comparator.comparing(Order::getOrderTime));
+		model.addAttribute("ordersConfirmed", ordersConfirmed);
+		Collections.sort(ordersDelivered, Comparator.comparing(Order::getOrderTime));
+		model.addAttribute("ordersDelivered", ordersDelivered);
+
     	return "store_order";
     }
     
@@ -339,11 +386,11 @@ public class StoreAdminController {
 		
 		for(Table table: tables) {
 			String url = qrcodeConfiguration.getQrcodeBaseIpAndPort() 
-					+ "/customer/store/" 
+					+ "/store/table/invoice?storeid=" 
 					+ store.getId()
-					+ "/table/"
-					+ table.getId()
-					+"/invoice";
+					+ "&tableid="
+					+ table.getId();
+					
 			try {
 	            // Generate QR code for the URL and add it to the list
 	            String qrcode = CustomerController.generateQrCodeBase64(url);
@@ -357,4 +404,17 @@ public class StoreAdminController {
     	return "store_qrcode";
     }
     
+	@GetMapping("/storemanagement/confirmOrder")
+	public String confirmOrder(@RequestParam("orderid") Long orderid) {
+		UserDetails curUser = CurrentUserUtil.getCurrentUserDetails();
+		Order order = orderRepository.findById(orderid).get();
+		order.setStatus("CONFIRMED");
+		order = orderRepository.save(order);
+		Invoice invoice = invoiceRepository.findByCreatedOnTable(order.getOnTable())
+							.stream().filter(i -> i.getIsCurrentOnTable() == 1).findFirst().get();
+		InvoiceLog confirmLog = new InvoiceLog(LocalDateTime.now(), invoice, curUser.getUsername() + " has confirmed order");
+		invoiceLogRepository.save(confirmLog);
+
+		return "redirect:/storemanagement/dashboard/" + curUser.getUsername() + "/order";
+	}
 }

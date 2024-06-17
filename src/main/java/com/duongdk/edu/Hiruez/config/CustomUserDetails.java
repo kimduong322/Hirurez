@@ -1,9 +1,14 @@
 package com.duongdk.edu.Hiruez.config;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.duongdk.edu.Hiruez.model.User;
+import com.duongdk.edu.Hiruez.model.UserRole;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class CustomUserDetails implements UserDetails{
     private User user;
@@ -13,7 +18,14 @@ public class CustomUserDetails implements UserDetails{
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        UserRole role = this.user.getRole();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(role.getName()));
+        return authorities;
+    }
+
+    public boolean hasRole(String roleName) {
+        return this.user.hasRole(roleName);
     }
  
     @Override

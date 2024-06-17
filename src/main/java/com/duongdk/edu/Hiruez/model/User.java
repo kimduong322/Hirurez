@@ -44,5 +44,9 @@ public class User{
 		this.balance = balance;
 		this.role = role;
 	}
+
+	public boolean hasRole(String roleName) {
+		return this.role.getName().equals(roleName);
+	}
 }
 

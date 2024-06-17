@@ -6,39 +6,37 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@jakarta.persistence.Table(name = "oder_items")
-public class OrderItem {
-
+@Table(name = "restaurant_rate")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class StoreRate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "foodId", nullable = false)
-    private FoodItem food;
+    @JoinColumn(name = "restaurant_id")
+    private Store restaurant;
 
-    private Long quantity;
+    private int rating;
 
-	public OrderItem(Order order, FoodItem food, Long quantity) {
-		super();
-		this.order = order;
-		this.food = food;
-		this.quantity = quantity;
-	}
-    
+    // Constructors, getters, and setters
+    public StoreRate(User user, Store restaurant, int rating) {
+        this.user = user;
+        this.restaurant = restaurant;
+        this.rating = rating;
+    }
 }
-

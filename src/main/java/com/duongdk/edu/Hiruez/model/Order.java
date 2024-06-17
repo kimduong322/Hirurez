@@ -8,37 +8,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@ToString
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @jakarta.persistence.Table(name = "orders")
 public class Order {
-	public User getByUser() {
-		return byUser;
-	}
-	public void setByUser(User byUser) {
-		this.byUser = byUser;
-	}
-	public Table getOnTable() {
-		return onTable;
-	}
-	public void setOnTable(Table onTable) {
-		this.onTable = onTable;
-	}
-	public LocalDateTime getOrderTime() {
-		return orderTime;
-	}
-	public void setOrderTime(LocalDateTime orderTime) {
-		this.orderTime = orderTime;
-	}
-	public float getTotal() {
-		return total;
-	}
-	public void setTotal(float total) {
-		this.total = total;
-	}
-	public Long getId() {
-		return id;
-	}
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -52,16 +35,24 @@ public class Order {
 	private Table onTable;
 	
 	private LocalDateTime orderTime;
-    private float total;
-	public Order() {
-		super();
-	}
-	public Order(User byUser, Table onTable, LocalDateTime orderTime, float total) {
+    private double total;
+
+	private String status;
+
+	public Order(User byUser, Table onTable, LocalDateTime orderTime, double total) {
 		super();
 		this.byUser = byUser;
 		this.onTable = onTable;
 		this.orderTime = orderTime;
 		this.total = total;
 	}
-     
+	
+	public Order(User byUser, Table ontTable, LocalDateTime orderTime, double total, String status) {
+		super();
+		this.byUser = byUser;
+		this.onTable = ontTable;
+		this.orderTime = orderTime;
+		this.total = total;
+		this.status = status;
+	}
 }

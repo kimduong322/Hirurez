@@ -1,51 +1,27 @@
 package com.duongdk.edu.Hiruez.model;
 
+import com.amazonaws.transform.SimpleTypeCborUnmarshallers.LongCborUnmarshaller;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@ToString
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @jakarta.persistence.Table(name="invoice_items")
 public class InvoiceItem {
-
-	public Invoice getInvoice() {
-		return invoice;
-	}
-
-	public void setInvoice(Invoice invoice) {
-		this.invoice = invoice;
-	}
-
-	public FoodItem getFood() {
-		return food;
-	}
-
-	public void setFood(FoodItem food) {
-		this.food = food;
-	}
-
-	public Long getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Long quantity) {
-		this.quantity = quantity;
-	}
-
-	public User getByUser() {
-		return byUser;
-	}
-
-	public void setByUser(User byUser) {
-		this.byUser = byUser;
-	}
-
-	public Long getId() {
-		return id;
-	}
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,9 +41,7 @@ public class InvoiceItem {
     @JoinColumn(name = "by_user_id", nullable = false)
     private User byUser;
 
-	public InvoiceItem() {
-		super();
-	}
+    private int isConfirmed;
 
 	public InvoiceItem(Invoice invoice, FoodItem food, Long quantity, User byUser) {
 		super();

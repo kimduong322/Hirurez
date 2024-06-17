@@ -1,6 +1,7 @@
 package com.duongdk.edu.Hiruez.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,46 +9,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@ToString
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @jakarta.persistence.Table(name="invoices")
 public class Invoice {
-
-	public User getCreatedByUser() {
-		return createdByUser;
-	}
-
-	public void setCreatedByUser(User createdByUser) {
-		this.createdByUser = createdByUser;
-	}
-
-	public Table getCreatedOnTable() {
-		return createdOnTable;
-	}
-
-	public void setCreatedOnTable(Table createdOnTable) {
-		this.createdOnTable = createdOnTable;
-	}
-
-	public LocalDateTime getCreatedTime() {
-		return createdTime;
-	}
-
-	public void setCreatedTime(LocalDateTime createdTime) {
-		this.createdTime = createdTime;
-	}
-
-	public int getIsCurrentOnTable() {
-		return isCurrentOnTable;
-	}
-
-	public void setIsCurrentOnTable(int isCurrentOnTable) {
-		this.isCurrentOnTable = isCurrentOnTable;
-	}
-
-	public Long getId() {
-		return id;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,9 +41,10 @@ public class Invoice {
 	
 	private int isCurrentOnTable;
 
-	public Invoice() {
-		super();
-	}
+	@OneToMany(mappedBy = "invoice")
+    private List<InvoiceItem> invoiceItems;
+
+	private String status; // ORDERING, QUANTITY_CONFRIMED, PAID, STORE_CONFIRMED, DELIVERED
 
 	public Invoice(User createdByUser, Table createdOnTable, LocalDateTime createdTime, int isCurrentOnTable) {
 		super();
@@ -76,5 +53,24 @@ public class Invoice {
 		this.createdTime = createdTime;
 		this.isCurrentOnTable = isCurrentOnTable;
 	}
+
+	public Invoice(User createdByUser, Table createdOnTable, LocalDateTime createdTime, int isCurrentOnTable, List<InvoiceItem> items) {
+		super();
+		this.createdByUser = createdByUser;
+		this.createdOnTable = createdOnTable;
+		this.createdTime = createdTime;
+		this.isCurrentOnTable = isCurrentOnTable;
+		this.invoiceItems = items;
+	}
 	
+	public Invoice(User createdByUser, Table createdOnTable, LocalDateTime createdTime, int isCurrentOnTable,
+			List<InvoiceItem> items, String status) {
+		super();
+		this.createdByUser = createdByUser;
+		this.createdOnTable = createdOnTable;
+		this.createdTime = createdTime;
+		this.isCurrentOnTable = isCurrentOnTable;
+		this.invoiceItems = items;
+		this.status = status;
+	}
 }

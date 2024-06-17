@@ -36,9 +36,9 @@ public class SecurityConfig {
                                 .requestMatchers("/registration/**", "/login/**", "/images/**", "/fonts/**", "/js/**",
                                 "/css/**", "/webjars/**")
                                 .permitAll()
-                                // .requestMatchers("/admin/**").hasRole("sysadmin")
-                                // .requestMatchers("/storemanagement/**").hasRole("admin")
-                                // .requestMatchers("/customer/**").hasRole("customer")
+                                // .requestMatchers("/admin/**").hasAuthority("SYSADMIN")
+                                // .requestMatchers("/storemanagement/**").hasRole("ADMIN")
+                                // .requestMatchers("/**").hasRole("CUSTOMER")
                                 .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

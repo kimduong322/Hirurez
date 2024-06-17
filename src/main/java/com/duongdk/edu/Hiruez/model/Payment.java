@@ -8,40 +8,23 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
+@ToString
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @jakarta.persistence.Table(name = "payments")
 public class Payment {
 
-    public Order getOrder() {
-		return order;
-	}
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-	public float getAmount() {
-		return amount;
-	}
-	public void setAmount(Long amount) {
-		this.amount = amount;
-	}
-	public LocalDateTime getPaymentTime() {
-		return paymentTime;
-	}
-	public void setPaymentTime(LocalDateTime paymentTime) {
-		this.paymentTime = paymentTime;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public Long getId() {
-		return id;
-	}
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -49,19 +32,28 @@ public class Payment {
     @JoinColumn(name = "orderId", nullable = false)
     private Order order;
 
-    private float amount;
+    private double amount;
     private LocalDateTime paymentTime;
     private String status;
-	public Payment(Order order, float amount, LocalDateTime paymentTime, String status) {
+
+    @ManyToOne
+    @JoinColumn(name = "byUserId", nullable = false)
+    private User byUser;
+
+	public Payment(Order order, double amount, LocalDateTime paymentTime, String status) {
 		super();
 		this.order = order;
 		this.amount = amount;
 		this.paymentTime = paymentTime;
 		this.status = status;
 	}
-	public Payment() {
-		super();
-	}
     
-   
+    public Payment(Order order, double amount, LocalDateTime paymentTime, String status, User byUser) { 
+        super(); 
+        this.order = order; 
+        this.amount = amount; 
+        this.paymentTime = paymentTime; 
+        this.status = status; 
+        this.byUser = byUser;
+    }
 }
