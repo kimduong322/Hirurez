@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.duongdk.edu.Hiruez.Utils.CurrentUserUtil;
 import com.duongdk.edu.Hiruez.Utils.QrcodeConfiguration;
+import com.duongdk.edu.Hiruez.dto.MyOrderDto;
 import com.duongdk.edu.Hiruez.model.FoodMenu;
 import com.duongdk.edu.Hiruez.model.Invoice;
 import com.duongdk.edu.Hiruez.model.InvoiceItem;
@@ -723,5 +724,19 @@ public class CustomerController {
 		return "order_sucessfull";
 	}
 	
-	
+	@GetMapping("/my-order")
+	public String getMyOrderPage(Model model) {
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("curUser", curUser);
+		List<Order> myOrders = orderRepository.findAllByByUser(curUser);
+		
+		List<MyOrderDto> orderDtos = new ArrayList<>();
+		for (Order o : myOrders) {
+			orderDtos.add(
+				new MyOrderDto(o, orderItemRepository.findByOrder(o), paymentRepository.findByOrder(o))
+			);
+		}
+		model.addAttribute("orderDtos", orderDtos);
+		return "my_order";
+	}
 }

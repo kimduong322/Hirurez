@@ -35,6 +35,9 @@ public class User{
     @ManyToOne
 	@JoinColumn(name = "role_id", nullable = false)
 	private UserRole role;
+
+	@Column(name = "video_viewed_time")
+	private Long videoViewdTime;
     
     public User(String username, String password, String email, Double balance, UserRole role) {
 		super();

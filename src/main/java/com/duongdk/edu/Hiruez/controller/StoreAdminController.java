@@ -417,4 +417,22 @@ public class StoreAdminController {
 
 		return "redirect:/storemanagement/dashboard/" + curUser.getUsername() + "/order";
 	}
+
+	@GetMapping("/storemanagement/deliverOrder")
+	public String deliverOrder(@RequestParam("orderid") Long orderId) {
+		UserDetails curUser = CurrentUserUtil.getCurrentUserDetails();
+		Order order = orderRepository.findById(orderId).get();
+		order.setStatus("DELIVERED");
+		order = orderRepository.save(order);
+		Invoice invoice = invoiceRepository.findByCreatedOnTable(order.getOnTable())
+				.stream().filter(i -> i.getIsCurrentOnTable() == 1).findFirst().get();
+		invoice.setStatus("DELIVERED");
+		invoice.setIsCurrentOnTable(0);
+		invoice = invoiceRepository.save(invoice);
+		
+		InvoiceLog deliverLog = new InvoiceLog(LocalDateTime.now(), invoice, "Order has been delivered to customer.");
+		invoiceLogRepository.save(deliverLog);
+
+		return "redirect:/storemanagement/dashboard/" + curUser.getUsername() + "/order";
+	}
 }

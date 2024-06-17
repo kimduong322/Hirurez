@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.duongdk.edu.Hiruez.model.Order;
 import com.duongdk.edu.Hiruez.model.Table;
+import com.duongdk.edu.Hiruez.model.User;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByOnTable(Table table);
 //	List<Order> findAllByOnTable_Store_Owner(User owner);
+	List<Order> findAllByByUser(User user);
 }
