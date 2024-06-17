@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 25, 2024 lúc 12:57 AM
+-- Thời gian đã tạo: Th6 17, 2024 lúc 02:38 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -48,7 +48,11 @@ INSERT INTO `deposit_money_payment` (`id`, `user_id`, `amount`, `bankcode`, `car
 (3, 570, 25000, 'VNPAY', 'QRCODE', 'Nap tien vao he thong luc : 18:31:50 24-05-2024', 'FAILED', 'VN_PAY'),
 (4, 3, 12000, 'VNPAY', 'QRCODE', 'Nap tien vao he thong luc : 18:40:40 24-05-2024', 'FAILED', 'VN_PAY'),
 (5, 3, 12000, 'EXIMBANK', 'ATM', 'Nap tien vao he thong luc : 18:41:25 24-05-2024', 'FAILED', 'VN_PAY'),
-(6, 571, 20000, 'NCB', 'ATM', 'Nap tien vao he thong luc : 05:52:47 25-05-2024', 'SUCCESSFUL', 'VN_PAY');
+(6, 571, 20000, 'NCB', 'ATM', 'Nap tien vao he thong luc : 05:52:47 25-05-2024', 'SUCCESSFUL', 'VN_PAY'),
+(7, 3, 100000, 'NCB', 'ATM', 'Nap tien vao he thong luc : 10:11:45 30-05-2024', 'SUCCESSFUL', 'VN_PAY'),
+(8, 3, 100000, 'VNPAY', 'QRCODE', 'Nap tien vao he thong luc : 11:41:31 04-06-2024', 'FAILED', 'VN_PAY'),
+(9, 569, 310000, 'NCB', 'ATM', 'Nap tien vao he thong luc : 09:28:38 06-06-2024', 'SUCCESSFUL', 'VN_PAY'),
+(10, 560, 275000, 'NCB', 'ATM', 'Nap tien vao he thong luc : 14:55:33 11-06-2024', 'SUCCESSFUL', 'VN_PAY');
 
 -- --------------------------------------------------------
 
@@ -237,15 +241,21 @@ CREATE TABLE `invoices` (
   `by_user_id` bigint(20) NOT NULL,
   `created_time` datetime(6) DEFAULT NULL,
   `id` bigint(20) NOT NULL,
-  `on_table_id` bigint(20) NOT NULL
+  `on_table_id` bigint(20) NOT NULL,
+  `status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `invoices`
 --
 
-INSERT INTO `invoices` (`is_current_on_table`, `by_user_id`, `created_time`, `id`, `on_table_id`) VALUES
-(1, 3, '2024-04-17 15:23:16.000000', 1, 7);
+INSERT INTO `invoices` (`is_current_on_table`, `by_user_id`, `created_time`, `id`, `on_table_id`, `status`) VALUES
+(1, 3, '2024-04-17 15:23:16.000000', 1, 7, ''),
+(1, 3, '2024-05-29 14:46:49.000000', 2, 53, ''),
+(1, 3, '2024-06-04 11:45:34.000000', 3, 3, ''),
+(1, 560, '2024-06-05 23:41:28.000000', 4, 57, ''),
+(1, 3, '2024-06-06 09:24:15.000000', 5, 58, ''),
+(1, 3, '2024-06-16 18:39:19.000000', 6, 59, 'ORDERING');
 
 -- --------------------------------------------------------
 
@@ -258,17 +268,72 @@ CREATE TABLE `invoice_items` (
   `food_id` bigint(20) NOT NULL,
   `id` bigint(20) NOT NULL,
   `order_id` bigint(20) NOT NULL,
-  `quantity` bigint(20) DEFAULT NULL
+  `quantity` bigint(20) DEFAULT NULL,
+  `is_confirmed` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `invoice_items`
 --
 
-INSERT INTO `invoice_items` (`by_user_id`, `food_id`, `id`, `order_id`, `quantity`) VALUES
-(3, 6, 1, 1, 1),
-(6, 8, 2, 1, 1),
-(7, 9, 3, 1, 1);
+INSERT INTO `invoice_items` (`by_user_id`, `food_id`, `id`, `order_id`, `quantity`, `is_confirmed`) VALUES
+(3, 6, 1, 1, 1, 1),
+(6, 8, 2, 1, 1, 1),
+(7, 9, 3, 1, 1, 1),
+(570, 10, 4, 1, 3, 1),
+(3, 7, 5, 1, 2, 1),
+(569, 10, 6, 1, 1, 1),
+(8, 11, 7, 1, 2, 1),
+(571, 7, 8, 1, 3, 1),
+(3, 9, 9, 1, 1, 1),
+(3, 10, 10, 1, 1, 1),
+(3, 1, 11, 3, 1, 1),
+(3, 2, 12, 3, 1, 1),
+(560, 46, 13, 4, 1, 1),
+(560, 56, 14, 4, 1, 1),
+(3, 46, 15, 5, 1, 1),
+(569, 48, 16, 5, 2, 1),
+(3, 48, 17, 4, 1, 1),
+(3, 55, 18, 6, 1, 0),
+(3, 56, 19, 6, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `invoice_logging`
+--
+
+CREATE TABLE `invoice_logging` (
+  `id` bigint(20) NOT NULL,
+  `create_time` datetime NOT NULL,
+  `on_invoice_id` bigint(20) NOT NULL,
+  `logging_message` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `invoice_logging`
+--
+
+INSERT INTO `invoice_logging` (`id`, `create_time`, `on_invoice_id`, `logging_message`) VALUES
+(1, '2024-04-17 15:23:16', 1, 'duongdk created the order'),
+(2, '2024-06-03 14:59:51', 1, 'duongdk has confirmed quantity'),
+(3, '2024-06-03 15:05:01', 1, 'Warren DT has confirmed quantity'),
+(4, '2024-06-03 15:06:45', 1, 'James Butt has confirmed quantity'),
+(5, '2024-06-03 15:19:36', 1, 'Trang has confirmed quantity'),
+(6, '2024-06-03 15:27:46', 1, 'trungtv has confirmed quantity'),
+(7, '2024-06-03 15:28:56', 1, 'dungnn has confirmed quantity'),
+(8, '2024-06-03 15:29:35', 1, 'Voi Ban Don has confirmed quantity'),
+(9, '2024-06-03 15:31:48', 1, 'duongdk has confirmed quantity'),
+(10, '2024-06-04 11:47:33', 3, 'duongdk has confirmed quantity'),
+(11, '2024-06-05 23:41:28', 4, 'LyLy created the order'),
+(12, '2024-06-06 09:24:16', 5, 'duongdk created the order'),
+(13, '2024-06-06 09:26:39', 5, 'duongdk has confirmed quantity'),
+(14, '2024-06-06 09:27:03', 5, 'Voi Ban Don has confirmed quantity'),
+(15, '2024-06-11 12:29:16', 4, 'duongdk has confirmed quantity'),
+(16, '2024-06-11 12:29:31', 4, 'LyLy has confirmed quantity'),
+(17, '2024-06-12 19:47:36', 4, 'lyly has ordered successfull.'),
+(18, '2024-06-16 00:08:16', 5, 'thepizzacompanyadmin has confirmed order'),
+(19, '2024-06-16 18:39:19', 6, 'duongdk created the order');
 
 -- --------------------------------------------------------
 
@@ -328,7 +393,18 @@ INSERT INTO `oder_items` (`food_id`, `id`, `order_id`, `quantity`) VALUES
 (10, 9, 3, 1),
 (11, 10, 3, 1),
 (8, 11, 4, 1),
-(9, 12, 4, 3);
+(9, 12, 4, 3),
+(1, 13, 5, 1),
+(2, 14, 5, 1),
+(1, 15, 6, 1),
+(2, 16, 6, 1),
+(1, 17, 7, 1),
+(2, 18, 7, 1),
+(46, 19, 8, 1),
+(48, 20, 8, 2),
+(48, 21, 9, 1),
+(56, 22, 9, 1),
+(46, 23, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -341,18 +417,24 @@ CREATE TABLE `orders` (
   `by_user_id` bigint(20) NOT NULL,
   `id` bigint(20) NOT NULL,
   `on_table_id` bigint(20) NOT NULL,
-  `order_time` datetime(6) DEFAULT NULL
+  `order_time` datetime(6) DEFAULT NULL,
+  `status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `orders`
 --
 
-INSERT INTO `orders` (`total`, `by_user_id`, `id`, `on_table_id`, `order_time`) VALUES
-(9, 3, 1, 1, '2024-04-17 15:23:15.000000'),
-(12, 3, 2, 3, '2023-12-30 15:26:00.000000'),
-(31.5, 6, 3, 11, '2024-04-17 15:23:16.000000'),
-(12.8, 7, 4, 16, '2023-12-30 15:26:00.000000');
+INSERT INTO `orders` (`total`, `by_user_id`, `id`, `on_table_id`, `order_time`, `status`) VALUES
+(225000, 3, 1, 1, '2024-04-17 15:23:15.000000', 'PAID'),
+(300000, 3, 2, 3, '2023-12-30 15:26:00.000000', 'PAID'),
+(787500, 6, 3, 11, '2024-04-17 15:23:16.000000', 'PAID'),
+(320000, 7, 4, 16, '2023-12-30 15:26:00.000000', 'PAID'),
+(87500, 3, 5, 3, '2024-06-06 07:48:24.000000', 'PAID'),
+(87500, 3, 6, 3, '2024-06-06 07:49:44.000000', 'PAID'),
+(87500, 3, 7, 3, '2024-06-06 07:51:24.000000', 'PAID'),
+(480000, 3, 8, 58, '2024-06-06 09:30:14.000000', 'CONFIRMED'),
+(427500, 560, 9, 57, '2024-06-12 19:47:36.000000', 'PAID');
 
 -- --------------------------------------------------------
 
@@ -365,18 +447,26 @@ CREATE TABLE `payments` (
   `id` bigint(20) NOT NULL,
   `order_id` bigint(20) NOT NULL,
   `payment_time` datetime(6) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL
+  `status` varchar(255) DEFAULT NULL,
+  `by_user_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `payments`
 --
 
-INSERT INTO `payments` (`amount`, `id`, `order_id`, `payment_time`, `status`) VALUES
-(9, 1, 1, '2024-04-17 15:23:15.000000', 'SUCCESS'),
-(12, 2, 2, '2023-12-30 15:26:00.000000', 'SUCCESS'),
-(31.5, 3, 3, '2024-04-17 15:23:16.000000', 'SUCCESS'),
-(12.8, 4, 4, '2023-12-30 15:26:00.000000', 'SUCCESS');
+INSERT INTO `payments` (`amount`, `id`, `order_id`, `payment_time`, `status`, `by_user_id`) VALUES
+(225000, 1, 1, '2024-04-17 15:23:15.000000', 'SUCCESSFULL', 3),
+(300000, 2, 2, '2023-12-30 15:26:00.000000', 'SUCCESSFULL', 3),
+(787500, 3, 3, '2024-04-17 15:23:16.000000', 'SUCCESSFULL', 6),
+(320000, 4, 4, '2023-12-30 15:26:00.000000', 'SUCCESSFULL', 7),
+(87500, 5, 5, '2024-06-06 07:48:24.000000', 'SUCCESSFULL', 3),
+(87500, 6, 6, '2024-06-06 07:49:44.000000', 'SUCCESSFULL', 3),
+(87500, 7, 7, '2024-06-06 07:51:24.000000', 'SUCCESSFULL', 3),
+(175000, 8, 8, '2024-06-06 09:30:14.000000', 'SUCCESSFULL', 3),
+(305000, 9, 8, '2024-06-06 09:30:14.000000', 'SUCCESSFULL', 569),
+(275000, 10, 9, '2024-06-12 19:47:36.000000', 'SUCCESSFULL', 560),
+(152500, 11, 9, '2024-06-12 19:47:36.000000', 'SUCCESSFULL', 3);
 
 -- --------------------------------------------------------
 
@@ -1705,8 +1795,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`balance`, `id`, `role_id`, `email`, `password`, `username`) VALUES
 (2499975000, 1, 1, 'hiruez@gmail.com', '$2a$10$FLjwCRI0jtCPdFLdvRQPEOqp.68rmkCxVu8oFIbz29atjcfaEEp7.', 'sysadmin'),
-(12500000, 2, 2, 'buncotuyet@gmail.com', '$2a$10$FU6f9jQKze1Hnri/acw7quRpQkIALFO/HRYY78MPqcu1NY3ybXC5m', 'buncoTuyet_admin'),
-(2500000, 3, 3, 'daokimduong322@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'duongdk'),
+(12762500, 2, 2, 'buncotuyet@gmail.com', '$2a$10$FU6f9jQKze1Hnri/acw7quRpQkIALFO/HRYY78MPqcu1NY3ybXC5m', 'buncoTuyet_admin'),
+(2162500, 3, 3, 'daokimduong322@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'duongdk'),
 (24975000, 4, 3, 'minh@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'minh'),
 (12500000, 5, 2, 'cimnieusingapore@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'comNieuSingapore_admin'),
 (1250000, 6, 3, 'dungnn@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'dungnn'),
@@ -2217,7 +2307,7 @@ INSERT INTO `users` (`balance`, `id`, `role_id`, `email`, `password`, `username`
 (5000000, 510, 2, 'bunthuy@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'bunthuyadmin'),
 (5025000, 511, 2, 'bumtro@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'bumtroadmin'),
 (5250000, 512, 2, 'bonchonchicken@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'bonchonchickenadmin'),
-(3750000, 513, 2, 'thepizzacompany@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'thepizzacompanyadmin'),
+(4230000, 513, 2, 'thepizzacompany@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'thepizzacompanyadmin'),
 (2000000, 514, 2, 'dominopizza@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'dominopizzaadmin'),
 (2475000, 515, 2, 'chaosuonsunvadoannhanh@gmail.com', '$2a$10$C3PVgbLNWbwyK8LV9xIqb.UypTGolP1oqM..hK7jlRK2xTKfQPYVu', 'chaosuonsunvadoannhanhadmin'),
 (0, 552, 3, 'andreawilson@gmail.com', '$2a$10$rAEQ64b4x3ghXRK2csnFQODs50.BFTbX2k5XnHbtBobs6Kn04RVSa', 'Andrea Wilson'),
@@ -2237,7 +2327,7 @@ INSERT INTO `users` (`balance`, `id`, `role_id`, `email`, `password`, `username`
 (0, 566, 3, 'wean@gmail.com', '$2a$10$sLzyHVPP0zBnD0nRNNhJeuqWkXpTVeJdRnCUJF7AHKd8U5AKcxapK', 'WEAN'),
 (0, 567, 3, 'wean1@gmail.com', '$2a$10$DV7srBA/mUaGRZ0k0fDoSOWQqTPQmfffifwwvLzxFyEPu8ruyxN4S', 'WEAN1'),
 (80000, 568, 3, 'duong.dk205075@sis.hust.edu.vn', '$2a$10$Wlryb9IbDaVllF3Em.g8t./bABI1Su/uOrSIjwWE2GipBRd3ejty6', 'DuongDK2'),
-(0, 569, 3, 'voibandon@gmail.com', '$2a$10$DTMTaxx8SJiR3i3DDtkb1uiPHyjdazlY0YpwOwJLfKZoApZDfjut6', 'Voi Ban Don'),
+(5000, 569, 3, 'voibandon@gmail.com', '$2a$10$DTMTaxx8SJiR3i3DDtkb1uiPHyjdazlY0YpwOwJLfKZoApZDfjut6', 'Voi Ban Don'),
 (165000, 570, 3, 'trang@gmail.com', '$2a$10$/0he2a7ifwb9Vcwgp66/yuYg5c.NPJnoP.b.KGY3ZDbmCHny5r9uu', 'Trang'),
 (20000, 571, 3, 'warrentdt@gmail.com', '$2a$10$zT6cTGxiMSp6D21UQm8WiuMt6HQvP3rR/uomJK4XYPMQy1859sUEq', 'Warren DT');
 
@@ -2257,9 +2347,9 @@ CREATE TABLE `user_roles` (
 --
 
 INSERT INTO `user_roles` (`id`, `name`) VALUES
-(1, 'sysadmin'),
-(2, 'admin'),
-(3, 'customer');
+(1, 'ROLE_SYSADMIN'),
+(2, 'ROLE_ADMIN'),
+(3, 'ROLE_CUSTOMER');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -2305,6 +2395,13 @@ ALTER TABLE `invoice_items`
   ADD KEY `FKofjjo8g9b4jqb6v9txxus17k2` (`order_id`);
 
 --
+-- Chỉ mục cho bảng `invoice_logging`
+--
+ALTER TABLE `invoice_logging`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_invoice` (`on_invoice_id`);
+
+--
 -- Chỉ mục cho bảng `menus`
 --
 ALTER TABLE `menus`
@@ -2332,7 +2429,8 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK81gagumt0r8y3rmudcgpbk42l` (`order_id`);
+  ADD KEY `FK81gagumt0r8y3rmudcgpbk42l` (`order_id`),
+  ADD KEY `byUserId` (`by_user_id`);
 
 --
 -- Chỉ mục cho bảng `restaurant_rate`
@@ -2384,7 +2482,7 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT cho bảng `deposit_money_payment`
 --
 ALTER TABLE `deposit_money_payment`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT cho bảng `foods`
@@ -2402,13 +2500,19 @@ ALTER TABLE `food_menus`
 -- AUTO_INCREMENT cho bảng `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `invoice_items`
 --
 ALTER TABLE `invoice_items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT cho bảng `invoice_logging`
+--
+ALTER TABLE `invoice_logging`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT cho bảng `menus`
@@ -2420,19 +2524,19 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT cho bảng `oder_items`
 --
 ALTER TABLE `oder_items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT cho bảng `restaurant_rate`
@@ -2509,6 +2613,12 @@ ALTER TABLE `invoice_items`
   ADD CONSTRAINT `FKp4emrtct75fdk8m0jflto0chw` FOREIGN KEY (`by_user_id`) REFERENCES `users` (`id`);
 
 --
+-- Các ràng buộc cho bảng `invoice_logging`
+--
+ALTER TABLE `invoice_logging`
+  ADD CONSTRAINT `fk_invoice` FOREIGN KEY (`on_invoice_id`) REFERENCES `invoices` (`id`);
+
+--
 -- Các ràng buộc cho bảng `menus`
 --
 ALTER TABLE `menus`
@@ -2532,7 +2642,8 @@ ALTER TABLE `orders`
 -- Các ràng buộc cho bảng `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `FK81gagumt0r8y3rmudcgpbk42l` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+  ADD CONSTRAINT `FK81gagumt0r8y3rmudcgpbk42l` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`by_user_id`) REFERENCES `users` (`id`);
 
 --
 -- Các ràng buộc cho bảng `restaurant_rate`

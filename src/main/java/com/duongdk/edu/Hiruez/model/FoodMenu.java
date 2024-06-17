@@ -6,38 +6,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@ToString
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @jakarta.persistence.Table(name = "food_menus")
 public class FoodMenu {
-	public FoodItem getFood() {
-		return food;
-	}
-
-	public void setFood(FoodItem food) {
-		this.food = food;
-	}
-
-	public Menu getMenu() {
-		return menu;
-	}
-
-	public void setMenu(Menu menu) {
-		this.menu = menu;
-	}
-
-	public Long getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Long quantity) {
-		this.quantity = quantity;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,10 +39,6 @@ public class FoodMenu {
 		this.food = food;
 		this.menu = menu;
 		this.quantity = quantity;
-	}
-
-	public FoodMenu() {
-		super();
 	}
 	
 }

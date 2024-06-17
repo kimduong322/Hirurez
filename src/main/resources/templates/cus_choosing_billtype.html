@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodScan | Checkout on table</title>
+
+    <!-- bootstrap css-->
+    <link rel="stylesheet" type="text/css" id="rtl-link" th:href="@{/css/vendors/bootstrap.css}">
+
+    <!-- remixicon css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/remixicon.css}">
+
+    <!-- theme css-->
+    <link rel="stylesheet" id="change-link" type="text/css" th:href="@{/css/style.css}">
+
+    <!-- swiper css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/swiper-bundle.min.css}">
+
+</head>
+
+<body class="bg-color">
+    <!-- Header section start -->
+    <header>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg p-0">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvasNavbar">
+                    <span class="navbar-toggler-icon">
+                        <i class="ri-menu-line"></i>
+                    </span>
+                </button>
+                <a th:href="@{'/'}">
+                    <img class="img-fluid logo" th:src="@{/images/hiruez_logo.jpg}" alt="logo">
+                </a>
+                <a th:href="@{'/depositMoney'}"
+                    class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
+                    <span th:text="${curUser.balance + ' VND'}"></span><i class="ri-add-line"></i>
+                </a>
+    
+                <!-- Cart Section-->
+                <div class="nav-option order-md-2">
+                    <div class="dropdown-button">
+                        <div class="cart-button">
+                            <span>5</span> <!-- cart item counts here-->
+                            <i class="ri-shopping-cart-line text-white cart-bag"></i>
+                        </div>
+                        <div class="onhover-box">
+                            <ul class="cart-list">
+                                <li class="product-box-contain">
+    
+                                </li>
+                            </ul>
+                            <div class="price-box">
+                                <h5>Total :</h5>
+                                <h4 class="theme-color fw-semibold"></h4>
+                            </div>
+                            <div class="button-group">
+                                <a class="btn btn-sm theme-btn w-100 d-block rounded-2">
+                                    View Cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="profile-part dropdown-button order-md-2">
+                        <img class="img-fluid profile-pic" th:src="${'/images/avatars/' + curUser.id + '.png'}"
+                            alt="profile">
+                        <div>
+                            <h6 class="fw-normal" th:text="${'Hi, ' + #authentication.name}"></h6> <!--Hi+Name-->
+                            <h5 class="fw-medium">Have a good day!</h5> <!--balance-->
+                        </div>
+                        <div class="onhover-box onhover-sm">
+                            <ul class="menu-list">
+                                <li>
+                                    <a class="dropdown-item" th:href="@{'/profile'}">
+                                        Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" th:href="@{'/userSetting'}">
+                                        Settings
+                                    </a>
+                                </li>
+                            </ul>
+                            <div>
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="logout-button btn btn-inline">
+                                        <i class="ri-login-box-line me-2"></i>
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Cart Section end-->
+    
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                        <button class="navbar-toggler btn-close" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#offcanvasNavbar" data-bs-dismiss="offcanvas">
+                        </button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-center flex-grow-1">
+                            <ul class="navbar-nav justify-content-center flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{'/'}">Home</a>
+                                </li>
+    
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
+                                        data-bs-toggle="toggle" aria-expanded="false">Restaurants</a>
+                                </li>
+    
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
+                                        data-bs-toggle="toggle" aria-expanded="false">Shorts</a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- Header Section end -->
+    
+    <!-- banner section starts -->
+    <section class="product-banner-section">
+        <div class="container">
+            <div class="restaurant-box">
+                <div class="restaurant-image">
+                    <img class="img-fluid img" th:src="${'/images/stores/' + store.id + '.jpg'}" alt="brand">
+                </div>
+                <div class="restaurant-details">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div>
+                            <h2 class="restaurant-name" th:text="${store.name}">
+    
+                            </h2>
+                            <h4 class="restaurant-place" th:text="${store.address}"></h4>
+                        </div>
+                        <div class="restaurant-description">
+                            <div class="categories-icon">
+                                <a href="#!" id="liveToastBtn">
+                                    <i class="ri-share-line icon text-white"></i>
+                                </a>
+                                <a href="#!" class="like-btn animate inactive">
+                                    <i class="ri-heart-3-fill fill-icon"></i>
+                                    <i class="ri-heart-3-line text-white outline-icon"></i>
+                                    <div class="effect-group">
+                                        <span class="effect"></span>
+                                        <span class="effect"></span>
+                                        <span class="effect"></span>
+                                        <span class="effect"></span>
+                                        <span class="effect"></span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="distance d-flex align-items-center">
+                                <h4 class="text-white shop-time" th:text="${'Max waiting: ' + store.wating_times + 'm'}">
+                                </h4>
+                                <h4 class="rating-star">
+                                    <span th:text="${#numbers.formatDecimal(store.rating, 1, 'POINT', 1, 'POINT')}"></span>
+                                    <span class="star"><i class="ri-star-s-fill"></i></span>
+                                    <span th:text="${' (' + store.rating_count + ' Reviews)'}"></span>
+                                </h4>
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- banner section end -->
+
+    <!--  account section starts -->
+    <section class="account-section section-b-space pt-0">
+        <div class="container">
+            <div class="layout-sec">
+                <div class="row g-lg-4 g-4">
+                    <form id="paymentForm">
+                    <div class="col-lg-8">
+                        <div class="process-section" th:if="${curUser.username == invoice.createdByUser.username}">
+                            <ul class="process-list">
+                                <li class="done">
+                                    <a>
+                                        <div class="process-icon">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/user.svg}" alt="user confirm">
+                                        </div>
+                                        <h6>Confirm Quantity</h6>
+                                    </a>
+                                </li>
+    
+                                <li class="active">
+                                    <a>
+                                        <div class="process-icon">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/location.svg}" alt="location">
+                                        </div>
+                                        <h6>Checkout</h6>
+                                    </a>
+                                </li>
+    
+                                <li>
+                                    <a>
+                                        <div class="process-icon">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/wallet-add.svg}"
+                                                alt="payment">
+                                        </div>
+                                        <h6>Payment</h6>
+                                    </a>
+                                </li>
+    
+                                <li>
+                                    <a>
+                                        <div class="process-icon">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/verify.svg}" alt="done">
+                                        </div>
+                                        <h6>Order Successfull</h6>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="payment-section">
+                            <div class="title mb-0">
+                                <div class="loader-line"></div>
+                                <h3>Choose Payment Method</h3>
+                            </div>
+                            <div class="accordion payment-accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                            aria-expanded="false" aria-controls="collapseTwo">
+                                            Payment Type
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <ul class="card-list">
+                                                <li>
+                                                    <div class="form-check form-check-reverse">
+                                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                            <i class="ri-bill-line"></i>
+                                                            <span class="card-name dark-text">Pay All</span>
+                                                        </label>
+                                                        <input class="form-check-input" type="radio" name="paymentOption" value="payall" checked>
+                                                    </div>
+                                                </li>
+
+                                                <li>
+                                                    <div class="form-check form-check-reverse">
+                                                        <label class="form-check-label" for="flexRadioDefault2">
+                                                            <i class="ri-split-cells-horizontal"></i>
+                                                            <span class="card-name dark-text">Share Bill</span>
+                                                        </label>
+                                                        <input class="form-check-input" type="radio" name="paymentOption" value="sharebill">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-4">
+                        <div class="order-summery-section sticky-top">
+    
+                            <div class="checkout-detail">
+                                
+                                <div class="order-summery-section mt-0">
+                                    <div class="checkout-detail p-0">
+
+                                        <h5 class="bill-details-title fw-semibold dark-text">
+                                            Bill Details
+                                        </h5>
+                                        <div class="sub-total" th:each="entry: ${totalMoneyByUser}">
+                                            <div>
+                                                <img class="img img-fluid"
+                                                    style="width: 22px; height: 22px; border-radius: 50%;"
+                                                    th:src="${'/images/avatars/' + entry.key.id + '.png'}">
+                                                <span th:text="${entry.key.username}"></span>
+                                            </div>
+                                            <h6 class="fw-semibold"
+                                                th:text="${#numbers.formatDecimal((entry.value)/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
+                                            </h6>
+                                        </div>
+                                        <div class="grand-total ">
+                                            <h6 class="fw-semibold dark-text">To Pay</h6>
+                                            <h6 class="fw-semibold amount"
+                                                th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <a id="payNowBtn"
+                                    class="btn theme-btn restaurant-btn w-100 rounded-2">PAY NOW</a>
+
+                                <script th:inline="javascript">
+                                    /*<![CDATA[*/
+                                    document.getElementById('payNowBtn').addEventListener('click', function (event) {
+                                    event.preventDefault();
+                                    const form = document.getElementById('paymentForm');
+                                    const selectedOption = form.querySelector('input[name="paymentOption"]:checked').value;
+                                    const sharebill = selectedOption === 'sharebill' ? 1 : 0;
+                                    const payall = selectedOption === 'payall' ? 1 : 0;
+                                    const invoiceId = /*[[${invoice.id}]]*/ '';
+                                    const url = `/store/table/invoice/payment?invoiceid=${invoiceId}` + `&sharebill=${sharebill}` + `&payall=${payall}`;
+                                    window.location.href = url;
+                                    /*]]>*/
+                                });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- account section end-->
+
+
+    <!-- footer begin-->
+    <footer class="footer-section section-t-space">
+        <div class="container">
+            <div class="main-footer">
+                <div class="bottom-footer-part">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <h6>@ Copyright 2024 DuongDK. </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer end-->
+    
+    <!-- toast starts -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex bg-theme text-white">
+                <div class="toast-body">Restaurant URL Copied to Clipboard</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+    <!-- toast end -->
+    
+    <!-- Bg Overlay Start -->
+    <div class="bg-overlay" id="overlay"></div>
+    <!-- Bg Overlay end -->
+    
+    <!-- tap to top start -->
+    <button class="scroll scroll-to-top menu-page">
+        <i class="ri-arrow-up-s-line arrow"></i>
+    </button>
+    
+    <!-- responsive space -->
+    <div class="responsive-space"></div>
+    <!-- responsive space -->
+    
+    <!-- bootstrap js -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    
+    <!-- footer accordion js -->
+    <script th:src="@{/js/footer-accordion.js}"></script>
+    
+    <!-- loader js -->
+    <script th:src="@{/js/loader.js}"></script>
+    
+    <!-- swiper js -->
+    <script th:src="@{/js/swiper-bundle.min.js}"></script>
+    <script th:src="@{/js/custom-swiper.js}"></script>
+    
+    <!-- menu offcanvas js -->
+    <script th:src="@{/js/menu-offcanvas.js}"></script>
+    
+    <!-- toast js-->
+    <script th:src="@{/js/toast.js}"></script>
+    <!-- script js -->
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>
