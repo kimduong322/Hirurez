@@ -1,8 +1,6 @@
 package com.duongdk.edu.Hiruez.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,16 +20,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_roles")
-public class UserRole implements Serializable {
+public class UserRole implements Serializable{
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, unique = true)
-    private String name;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+  
+	@Column(nullable = false, unique = true)
+	private String name;
 
-    public UserRole(String name) {
+	public UserRole(String name) {
 		this.name = name;
 	}
-	
 }

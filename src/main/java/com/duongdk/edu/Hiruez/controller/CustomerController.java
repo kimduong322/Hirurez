@@ -39,6 +39,7 @@ import com.duongdk.edu.Hiruez.model.Store;
 import com.duongdk.edu.Hiruez.model.StoreRate;
 import com.duongdk.edu.Hiruez.model.Table;
 import com.duongdk.edu.Hiruez.model.User;
+import com.duongdk.edu.Hiruez.model.UserVoucher;
 import com.duongdk.edu.Hiruez.model.DepositMoneyPayment;
 import com.duongdk.edu.Hiruez.model.FoodItem;
 import com.duongdk.edu.Hiruez.repository.FoodMenuRepository;
@@ -53,6 +54,7 @@ import com.duongdk.edu.Hiruez.repository.StoreRateRepository;
 import com.duongdk.edu.Hiruez.repository.StoreRepository;
 import com.duongdk.edu.Hiruez.repository.TableRepository;
 import com.duongdk.edu.Hiruez.repository.UserRepository;
+import com.duongdk.edu.Hiruez.repository.UserVoucherRepository;
 import com.duongdk.edu.Hiruez.repository.DepositMoneyPaymentRepository;
 import com.duongdk.edu.Hiruez.repository.FoodItemRepository;
 import com.google.zxing.BarcodeFormat;
@@ -101,6 +103,8 @@ public class CustomerController {
 
 	@Autowired private PaymentRepository paymentRepository;
 	
+	@Autowired private UserVoucherRepository userVoucherRepository;
+
 	@GetMapping("/customer/home")
 	public String getHomePage(Model model) {
 		List<Store> stores = storeRepository.findAll();
@@ -639,21 +643,31 @@ public class CustomerController {
 	{
 			User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
 			model.addAttribute("curUser", curUser);
+
 			Invoice invoice = invoiceRepository.findById(invoiceId).get();
 			model.addAttribute("invoice", invoice);
 			model.addAttribute("store", invoice.getCreatedOnTable().getBelongsToStore());
+
 			List<InvoiceItem> items = invoiceItemRepository.findByInvoice(invoice);
 			Map<User, Double> totalMoneyByUser = items.stream()
 					.collect(Collectors.groupingBy(InvoiceItem::getByUser,
 							Collectors.summingDouble(item -> item.getQuantity() * item.getFood().getPrice())));
 			model.addAttribute("totalMoneyByUser", totalMoneyByUser);
+			
 			double totalMoney = items.stream()
 					.mapToDouble(item -> item.getQuantity() * item.getFood().getPrice())
 					.sum();
 			model.addAttribute("totalMoney", totalMoney);
+			
 			boolean isAllUserEnoughMoney = totalMoneyByUser.entrySet().stream()
 					.allMatch(entry -> entry.getKey().getBalance() >= entry.getValue());
 			model.addAttribute("isAllUserEnoughMoney", isAllUserEnoughMoney);
+			
+			Map<FoodItem, Long> quantityGroupByFood = items.stream()
+					.collect(Collectors.groupingBy(InvoiceItem::getFood,
+							Collectors.summingLong(item -> item.getQuantity())));
+			model.addAttribute("quantityGroupByFood", quantityGroupByFood);
+			model.addAttribute("promo", "none");
 			if (sharebill == 1 && payall == 0) {
 				logger.info("Invoice payment type: sharebill = 1, payall = 0");
 				return "payment_sharebill";
@@ -738,5 +752,103 @@ public class CustomerController {
 		}
 		model.addAttribute("orderDtos", orderDtos);
 		return "my_order";
+	}
+
+	@GetMapping("/applyPromocode")
+	public String applyPromocode(@RequestParam("code") String code, @RequestParam("invoiceid") Long invoiceId, Model model) {
+		String promoCode = '#' + code;
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("curUser", curUser);
+		List<UserVoucher> vouchers = userVoucherRepository.findByUser(curUser);
+		UserVoucher promo = null;
+		for (UserVoucher v : vouchers) {
+			if (v.getVoucher().getCode().equals(promoCode) && v.getRemainingCount() > 0) {
+				promo = v;
+				break;
+			}
+		}
+		if (promo == null) {
+			return "redirect:/store/table/invoice/payment?invoiceid=" + invoiceId + "&sharebill=0&payall=1";
+		} else {
+			Invoice invoice = invoiceRepository.findById(invoiceId).get();
+			model.addAttribute("invoice", invoice);
+			model.addAttribute("store", invoice.getCreatedOnTable().getBelongsToStore());
+			List<InvoiceItem> items = invoiceItemRepository.findByInvoice(invoice);
+			double totalMoney = items.stream()
+					.mapToDouble(item -> item.getQuantity() * item.getFood().getPrice())
+					.sum();
+			model.addAttribute("totalMoney", totalMoney);
+			Map<FoodItem, Long> quantityGroupByFood = items.stream()
+					.collect(Collectors.groupingBy(InvoiceItem::getFood,
+							Collectors.summingLong(item -> item.getQuantity())));
+			model.addAttribute("quantityGroupByFood", quantityGroupByFood);
+			if (promo.getVoucher().getVoucherType().equals("MONEY")) {
+				model.addAttribute("discount", promo.getVoucher().getValue());
+			} else if (promo.getVoucher().getVoucherType().equals("PERCENT")) {
+				model.addAttribute("discount", totalMoney * promo.getVoucher().getValue() /100);
+			}
+		}
+		model.addAttribute("promo", code);
+		return "payment_payall_2";
+	}
+
+	@GetMapping("/payall")
+	public String payAll(@RequestParam("promo") String code, @RequestParam("invoiceid") Long invoiceId, Model model) {
+		String promoCode = '#' + code;
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("curUser", curUser);
+		List<UserVoucher> vouchers = userVoucherRepository.findByUser(curUser);
+		UserVoucher promo = null;
+		for (UserVoucher v : vouchers) {
+			if (v.getVoucher().getCode().equals(promoCode) && v.getRemainingCount() > 0) {
+				promo = v;
+				break;
+			}
+		}
+		if (promo != null) {
+			promo.setRemainingCount(promo.getRemainingCount() - 1);
+			userVoucherRepository.save(promo);
+			Invoice invoice = invoiceRepository.findById(invoiceId).get();
+			model.addAttribute("invoice", invoice);
+			model.addAttribute("store", invoice.getCreatedOnTable().getBelongsToStore());
+			List<InvoiceItem> items = invoiceItemRepository.findByInvoice(invoice);
+			double totalMoney = items.stream()
+					.mapToDouble(item -> item.getQuantity() * item.getFood().getPrice())
+					.sum();
+			model.addAttribute("totalMoney", totalMoney);
+			Map<FoodItem, Long> quantityGroupByFood = items.stream()
+					.collect(Collectors.groupingBy(InvoiceItem::getFood,
+							Collectors.summingLong(item -> item.getQuantity())));
+			model.addAttribute("quantityGroupByFood", quantityGroupByFood);
+			float discount = 0;
+			if (promo.getVoucher().getVoucherType().equals("MONEY")) {
+				discount = promo.getVoucher().getValue();
+			} else if (promo.getVoucher().getVoucherType().equals("PERCENT")) {
+				discount = (float) totalMoney * promo.getVoucher().getValue() / 100;
+			}
+			model.addAttribute("discount", discount);
+			Order order = new Order(curUser, invoice.getCreatedOnTable(), LocalDateTime.now(), totalMoney - discount, "PAID");
+			order = orderRepository.save(order);
+			model.addAttribute("order", order);
+			Payment payment = new Payment(order, totalMoney - discount, LocalDateTime.now(), "SUCCESSFULL", curUser);
+			payment = paymentRepository.save(payment);
+			model.addAttribute("payments", payment);
+			List<OrderItem> orderItems = new ArrayList<OrderItem>();
+			for (Map.Entry<FoodItem, Long> item : quantityGroupByFood.entrySet()) {
+				OrderItem orderItem = new OrderItem(order, item.getKey(), item.getValue());
+				orderItem = orderItemRepository.save(orderItem);
+				orderItems.add(orderItem);
+			}
+			model.addAttribute("orderItems", orderItems);
+		}
+		model.addAttribute("promo", promo);
+		return "orderpayall_successfull";
+	}
+
+	@GetMapping("/shorts")
+	public String getShortsPage(Model model) {
+		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
+		model.addAttribute("curUser", curUser);
+		return "shorts";
 	}
 }

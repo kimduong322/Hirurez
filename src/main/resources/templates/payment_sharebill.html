@@ -260,6 +260,36 @@
                     <div class="col-lg-4">
                         <div class="order-summery-section sticky-top">
                             <div class="checkout-detail">
+                                <div class="cart-address-box">
+                                    <div class="add-img">
+                                        <img class="img-fluid img" th:src="@{/images/home.png}" alt="rp1">
+                                    </div>
+                                    <div class="add-content">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h5 class="dark-text deliver-place" th:text="${'Deliver to : ' + invoice.createdOnTable.name}"></h5>
+                                        </div>
+                                        <h6 class="address mt-2 content-color" th:text="${invoice.createdOnTable.belongsToStore.address}"></h6>
+                                    </div>
+                                </div>
+
+                                <h3 class="fw-semibold dark-text checkout-title">
+                                    Order Summery
+                                </h3>
+
+                                <ul>
+                                    <li th:each="f : ${quantityGroupByFood}">
+                                        <div class="horizontal-product-box">
+                                            <div class="product-content">
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 th:text="${f.getKey().getName()}"></h5>
+                                                    <h6 class="product-price" th:text="${#numbers.formatDecimal((f.getKey().getPrice() * f.getValue())/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}"></h6>
+                                                </div>
+                                                <h6 class="ingredients-text" th:text="${'Qty: ' + f.getValue()}"></h6>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+
                                 <div class="order-summery-section mt-0">
                                     <div class="checkout-detail p-0">
                                         <h5 class="bill-details-title fw-semibold dark-text">

@@ -1,5 +1,7 @@
 package com.duongdk.edu.Hiruez.model;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,24 +22,26 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @jakarta.persistence.Table(name = "users")
-public class User{
+public class User implements Serializable{
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
-	@Column(nullable = false)
+	@Column(name = "password", nullable = false)
     private String password;
-	@Column(nullable = false, unique = true)
+	@Column(name = "email", nullable = false, unique = true)
     private String email;
     private Double balance;
     
-    @ManyToOne
+	@ManyToOne
 	@JoinColumn(name = "role_id", nullable = false)
 	private UserRole role;
 
 	@Column(name = "video_viewed_time")
-	private Long videoViewdTime;
+	private Long videoViewedTime;
     
     public User(String username, String password, String email, Double balance, UserRole role) {
 		super();

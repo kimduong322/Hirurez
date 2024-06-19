@@ -4,21 +4,24 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodScan | Payment</title>
+    <title>FoodScan | Order Successfull</title>
+
     <!-- bootstrap css-->
     <link rel="stylesheet" type="text/css" id="rtl-link" th:href="@{/css/vendors/bootstrap.css}">
-    
+
     <!-- remixicon css-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/remixicon.css}">
-    
+
     <!-- theme css-->
     <link rel="stylesheet" id="change-link" type="text/css" th:href="@{/css/style.css}">
-    
+
     <!-- swiper css-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/swiper-bundle.min.css}">
-    
+
 </head>
+
 <body class="bg-color">
+
     <!-- Header section start -->
     <header>
         <div class="container">
@@ -192,38 +195,48 @@
                                         <h6>Confirm Quantity</h6>
                                     </a>
                                 </li>
-    
+                            
                                 <li class="done">
                                     <a>
                                         <div class="process-icon">
-                                            <img class="img-fluid icon" th:src="@{/images/svg/location-active.svg}"
-                                                alt="location">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/location-active.svg}" alt="location">
                                         </div>
                                         <h6>Checkout</h6>
                                     </a>
                                 </li>
-    
-                                <li class="active">
+                            
+                                <li class="done">
                                     <a>
                                         <div class="process-icon">
-                                            <img class="img-fluid icon" th:src="@{/images/svg/wallet-add-active.svg}"
-                                                alt="payment">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/wallet-add-active.svg}" alt="payment">
                                         </div>
                                         <h6>Payment</h6>
                                     </a>
                                 </li>
-    
-                                <li>
+                            
+                                <li class="active">
                                     <a>
                                         <div class="process-icon">
-                                            <img class="img-fluid icon" th:src="@{/images/svg/verify.svg}" alt="done">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/verify-active.svg}" alt="done">
                                         </div>
                                         <h6>Order Successfull</h6>
                                     </a>
                                 </li>
                             </ul>
                         </div>
-    
+
+                        <div class="account-part confirm-part">
+                            <img class="img-fluid account-img w-25" th:src="@{/images/gif/confirm.gif}">
+                            <h3>Your order has been successfully placed</h3>
+                            <p>
+                                Sit and relax while your order is being worked on. It’ll take
+                                5 min before you get it.
+                            </p>
+                            <div class="account-btn d-flex justify-content-center gap-2">
+                                <a th:href="${'/shorts'}" class="btn theme-btn mt-0">Shorts Video</a>
+                            </div>
+                        </div>
+
                         <div class="payment-section">
                             <div class="title mb-0">
                                 <div class="loader-line"></div>
@@ -237,8 +250,7 @@
                                             Payment Type
                                         </button>
                                     </h2>
-                                    <div id="collapseTwo" class="accordion-collapse collapse"
-                                        data-bs-parent="#accordionExample">
+                                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <ul class="card-list">
                                                 <li>
@@ -257,87 +269,67 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="col-lg-4">
                         <div class="order-summery-section sticky-top">
                             <div class="checkout-detail">
-                                <div class="cart-address-box">
-                                    <div class="add-img">
-                                        <img class="img-fluid img" th:src="@{/images/home.png}" alt="rp1">
-                                    </div>
-                                    <div class="add-content">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <h5 class="dark-text deliver-place"
-                                                th:text="${'Deliver to : ' + invoice.createdOnTable.name}"></h5>
-                                        </div>
-                                        <h6 class="address mt-2 content-color"
-                                            th:text="${invoice.createdOnTable.belongsToStore.address}"></h6>
-                                    </div>
-                                </div>
-    
-                                <h3 class="fw-semibold dark-text checkout-title">
-                                    Order Summery
-                                </h3>
-    
-                                <ul>
-                                    <li th:each="f : ${quantityGroupByFood}">
-                                        <div class="horizontal-product-box">
-                                            <div class="product-content">
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <h5 th:text="${f.getKey().getName()}"></h5>
-                                                    <h6 class="product-price"
-                                                        th:text="${#numbers.formatDecimal((f.getKey().getPrice() * f.getValue())/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
-                                                    </h6>
+                                <div class="order-summery-section mt-0">
+                                    <div class="checkout-detail p-0">
+                                        <h5 class="bill-details-title fw-semibold dark-text">
+                                            Order Summary
+                                        </h5>
+                                        <ul>
+                                            <li th:each="orderItem : ${orderItems}">
+                                                <div class="horizontal-product-box">
+                                                    <div class="product-content">
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            <h5 th:text="${orderItem.food.name}"></h5>
+                                                            <h6
+                                                                th:text="${#numbers.formatDecimal((orderItem.food.price * orderItem.quantity)/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
+                                                            </h6>
+                                                        </div>
+                                                        <h6 class="ingredients-text"></h6>
+                                                    </div>
                                                 </div>
-                                                <h6 class="ingredients-text" th:text="${'Qty: ' + f.getValue()}"></h6>
-                                            </div>
+                                            </li>
+                                        </ul>
+
+                                        <h5 class="bill-details-title fw-semibold dark-text">
+                                            Bill Details
+                                        </h5>
+
+                                        <div class="sub-total">
+                                            <h6 class="content-color fw-normal">Sub Total</h6>
+                                            <h6 class="fw-semibold" th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}">
+                                            </h6>
                                         </div>
-                                    </li>
-                                </ul>
-                                
-                                <div class="promo-code position-relative">
-                                    <form th:action="@{/applyPromocode}" method="get">
-                                        <input type="text" name="code" class="form-control code-form-control"
-                                            placeholder="Enter promo code">
-                                        <input type="hidden" th:name="invoiceid" th:value="${invoice.id}">
-                                        <button type="submit" class="btn theme-btn apply-btn mt-0">APPLY</button>
-                                    </form>
+                                        <div class="sub-total">
+                                            <h6 class="content-color fw-normal">Discount</h6>
+                                            <h6 class="fw-semibold" th:text="${#numbers.formatDecimal((discount)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}">
+                                            </h6>
+                                        </div>
+                                        <div class="grand-total">
+                                            <h6 class="fw-semibold dark-text">Total</h6>
+                                            <h6 class="fw-semibold amount"
+                                                th:text="${#numbers.formatDecimal((totalMoney-discount)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}">
+                                            </h6>
+                                        </div>
+                                        <div class="sub-total" th:each="payment: ${payments}">
+                                            <div>
+                                                <img class="img img-fluid" style="width: 22px; height: 22px; border-radius: 50%;"
+                                                    th:src="${'/images/avatars/' + payment.byUser.id + '.png'}">
+                                                <span th:text="${payment.byUser.username}"></span>
+                                                <span>
+                                                    <img class="img img-fluid" style="height: 22px; width: 36px;" th:src="@{/images/paid.png}">
+                                                </span>
+                                            </div>
+                                            <h6 class="fw-semibold"
+                                                th:text="${#numbers.formatDecimal((payment.amount)/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
+                                            </h6>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <h5 class="fw-semibold dark-text pt-3 pb-3">Bill Details</h5>
-                                <div class="sub-total">
-                                    <h6 class="content-color fw-normal">Sub Total</h6>
-                                    <h6 class="fw-semibold" th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}"></h6>
-                                </div>
-                                <div class="sub-total">
-                                    <h6 class="content-color fw-normal">Discount</h6>
-                                    <h6 class="fw-semibold">0.0 k VND</h6>
-                                </div>
-                                <div class="grand-total">
-                                    <h6 class="fw-semibold dark-text">Total</h6>
-                                    <h6 class="fw-semibold amount" th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}"></h6>
-                                </div>
-                                <h5 class="fw-semibold dark-text pt-3 pb-3">Payement operator</h5>
-                                <div class="sub-total">
-                                    <div>
-                                        <img class="img img-fluid" style="width: 22px; height: 22px; border-radius: 50%;"
-                                            th:src="${'/images/avatars/' + curUser.id + '.png'}">
-                                        <span th:text="${curUser.username}"></span>
-                                        <span th:if="${curUser.balance >= totalMoney}">
-                                            <img class="img img-fluid" style="height: 22px; width: 74px;" th:src="@{/images/enough_money.jpg}">
-                                        </span>
-                                        <span th:unless="${curUser.balance >= totalMoney}">
-                                            <span style="color: #F2A93E; font-weight: bold;"
-                                                th:text="${'(Thiếu ' + #numbers.formatDecimal((totalMoney - curUser.balance)/1000, 1, 'POINT', 1, 'POINT') + 'k VND)'}"></span>
-                                        </span>
-                                    </div>
-                                    <h6 class="fw-semibold" style="color: #277d2a;"
-                                        th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
-                                    </h6>
-                                </div>
-                                <a th:if="${curUser.balance >= totalMoney}" th:href="${'/payall?invoiceid=' + invoice.id + '&promo=' + promo}" class="btn theme-btn restaurant-btn w-100 rounded-2">PAY
-                                    NOW</a>
-                                <img class="dots-design" th:src="@{/images/svg/dots-design.svg}" alt="dots">
                             </div>
                         </div>
                     </div>
@@ -345,65 +337,5 @@
             </div>
         </div>
     </section>
-    <!-- account section end-->
-
-    <!-- footer begin-->
-    <footer class="footer-section section-t-space">
-        <div class="container">
-            <div class="main-footer">
-                <div class="bottom-footer-part">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <h6>@ Copyright 2024 DuongDK. </h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- footer end-->
-    
-    <!-- toast starts -->
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex bg-theme text-white">
-                <div class="toast-body">Restaurant URL Copied to Clipboard</div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    </div>
-    <!-- toast end -->
-    
-    <!-- Bg Overlay Start -->
-    <div class="bg-overlay" id="overlay"></div>
-    <!-- Bg Overlay end -->
-    
-    <!-- tap to top start -->
-    <button class="scroll scroll-to-top menu-page">
-        <i class="ri-arrow-up-s-line arrow"></i>
-    </button>
-    
-    <!-- responsive space -->
-    <div class="responsive-space"></div>
-    <!-- responsive space -->
-    
-    <!-- bootstrap js -->
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    
-    <!-- footer accordion js -->
-    <script th:src="@{/js/footer-accordion.js}"></script>
-    
-    <!-- loader js -->
-    <script th:src="@{/js/loader.js}"></script>
-    
-    <!-- swiper js -->
-    <script th:src="@{/js/swiper-bundle.min.js}"></script>
-    <script th:src="@{/js/custom-swiper.js}"></script>
-    
-    <!-- menu offcanvas js -->
-    <script th:src="@{/js/menu-offcanvas.js}"></script>
-    
-    <!-- toast js-->
-    <script th:src="@{/js/toast.js}"></script>
-    <!-- script js -->
-    <script th:src="@{/js/script.js}"></script>
 </body>
 </html>

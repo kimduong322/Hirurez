@@ -307,7 +307,7 @@
                                                 <img class="img img-fluid"
                                                     style="width: 22px; height: 22px; border-radius: 50%;"
                                                     th:src="${'/images/avatars/' + payment.byUser.id + '.png'}">
-                                                <span th:text="${entry.key.username}"></span>
+                                                <span th:text="${payment.byUser.username}"></span>
                                                 <span>
                                                     <img class="img img-fluid" style="height: 22px; width: 36px;"
                                                         th:src="@{/images/paid.png}">
@@ -320,7 +320,7 @@
 
                                         <div class="grand-total">
                                             <h6 class="fw-semibold dark-text">Total</h6>
-                                            <h6 class="fw-semibold amount" th:text="${order.}"></h6>
+                                            <h6 class="fw-semibold amount" th:text="${order.total}"></h6>
                                         </div>
                                     </div>
                                 </div>

@@ -183,7 +183,7 @@
         <div class="container">
             <div class="layout-sec">
                 <div class="row g-lg-4 g-4">
-                    <form id="paymentForm">
+                    
                     <div class="col-lg-8">
                         <div class="process-section" th:if="${curUser.username == invoice.createdByUser.username}">
                             <ul class="process-list">
@@ -199,7 +199,7 @@
                                 <li class="active">
                                     <a>
                                         <div class="process-icon">
-                                            <img class="img-fluid icon" th:src="@{/images/svg/location.svg}" alt="location">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/location-active.svg}" alt="location">
                                         </div>
                                         <h6>Checkout</h6>
                                     </a>
@@ -241,6 +241,7 @@
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
+                                            <form id="paymentForm">
                                             <ul class="card-list">
                                                 <li>
                                                     <div class="form-check form-check-reverse">
@@ -262,6 +263,7 @@
                                                     </div>
                                                 </li>
                                             </ul>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -306,22 +308,21 @@
                                 <script th:inline="javascript">
                                     /*<![CDATA[*/
                                     document.getElementById('payNowBtn').addEventListener('click', function (event) {
-                                    event.preventDefault();
-                                    const form = document.getElementById('paymentForm');
-                                    const selectedOption = form.querySelector('input[name="paymentOption"]:checked').value;
-                                    const sharebill = selectedOption === 'sharebill' ? 1 : 0;
-                                    const payall = selectedOption === 'payall' ? 1 : 0;
-                                    const invoiceId = /*[[${invoice.id}]]*/ '';
-                                    const url = `/store/table/invoice/payment?invoiceid=${invoiceId}` + `&sharebill=${sharebill}` + `&payall=${payall}`;
-                                    window.location.href = url;
+                                        event.preventDefault();
+                                        const form = document.getElementById('paymentForm');
+                                        const selectedOption = form.querySelector('input[name="paymentOption"]:checked').value;
+                                        const sharebill = selectedOption === 'sharebill' ? 1 : 0;
+                                        const payall = selectedOption === 'payall' ? 1 : 0;
+                                        const invoiceId = /*[[${invoice.id}]]*/ '';
+                                        const url = `/store/table/invoice/payment?invoiceid=${invoiceId}` + `&sharebill=${sharebill}` + `&payall=${payall}`;
+                                        window.location.href = url;
+                                    });
                                     /*]]>*/
-                                });
                                 </script>
                             </div>
                         </div>
                     </div>
 
-                    </form>
                 </div>
             </div>
         </div>

@@ -7,23 +7,25 @@
     <title>FoodScan | Payment</title>
     <!-- bootstrap css-->
     <link rel="stylesheet" type="text/css" id="rtl-link" th:href="@{/css/vendors/bootstrap.css}">
-    
+
     <!-- remixicon css-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/remixicon.css}">
-    
+
     <!-- theme css-->
     <link rel="stylesheet" id="change-link" type="text/css" th:href="@{/css/style.css}">
-    
+
     <!-- swiper css-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/vendors/swiper-bundle.min.css}">
-    
+
 </head>
+
 <body class="bg-color">
     <!-- Header section start -->
     <header>
         <div class="container">
             <nav class="navbar navbar-expand-lg p-0">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvasNavbar">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#offcanvasNavbar">
                     <span class="navbar-toggler-icon">
                         <i class="ri-menu-line"></i>
                     </span>
@@ -35,7 +37,7 @@
                     class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
                     <span th:text="${curUser.balance + ' VND'}"></span><i class="ri-add-line"></i>
                 </a>
-    
+
                 <!-- Cart Section-->
                 <div class="nav-option order-md-2">
                     <div class="dropdown-button">
@@ -46,7 +48,7 @@
                         <div class="onhover-box">
                             <ul class="cart-list">
                                 <li class="product-box-contain">
-    
+
                                 </li>
                             </ul>
                             <div class="price-box">
@@ -60,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="profile-part dropdown-button order-md-2">
                         <img class="img-fluid profile-pic" th:src="${'/images/avatars/' + curUser.id + '.png'}"
                             alt="profile">
@@ -93,7 +95,7 @@
                     </div>
                 </div>
                 <!-- Cart Section end-->
-    
+
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
@@ -107,12 +109,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" th:href="@{'/'}">Home</a>
                                 </li>
-    
+
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
                                         data-bs-toggle="toggle" aria-expanded="false">Restaurants</a>
                                 </li>
-    
+
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
                                         data-bs-toggle="toggle" aria-expanded="false">Shorts</a>
@@ -137,7 +139,7 @@
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div>
                             <h2 class="restaurant-name" th:text="${store.name}">
-    
+
                             </h2>
                             <h4 class="restaurant-place" th:text="${store.address}"></h4>
                         </div>
@@ -159,14 +161,16 @@
                                 </a>
                             </div>
                             <div class="distance d-flex align-items-center">
-                                <h4 class="text-white shop-time" th:text="${'Max waiting: ' + store.wating_times + 'm'}">
+                                <h4 class="text-white shop-time"
+                                    th:text="${'Max waiting: ' + store.wating_times + 'm'}">
                                 </h4>
                                 <h4 class="rating-star">
-                                    <span th:text="${#numbers.formatDecimal(store.rating, 1, 'POINT', 1, 'POINT')}"></span>
+                                    <span
+                                        th:text="${#numbers.formatDecimal(store.rating, 1, 'POINT', 1, 'POINT')}"></span>
                                     <span class="star"><i class="ri-star-s-fill"></i></span>
                                     <span th:text="${' (' + store.rating_count + ' Reviews)'}"></span>
                                 </h4>
-    
+
                             </div>
                         </div>
                     </div>
@@ -187,12 +191,13 @@
                                 <li class="done">
                                     <a>
                                         <div class="process-icon">
-                                            <img class="img-fluid icon" th:src="@{/images/svg/user.svg}" alt="user confirm">
+                                            <img class="img-fluid icon" th:src="@{/images/svg/user.svg}"
+                                                alt="user confirm">
                                         </div>
                                         <h6>Confirm Quantity</h6>
                                     </a>
                                 </li>
-    
+
                                 <li class="done">
                                     <a>
                                         <div class="process-icon">
@@ -202,7 +207,7 @@
                                         <h6>Checkout</h6>
                                     </a>
                                 </li>
-    
+
                                 <li class="active">
                                     <a>
                                         <div class="process-icon">
@@ -212,7 +217,7 @@
                                         <h6>Payment</h6>
                                     </a>
                                 </li>
-    
+
                                 <li>
                                     <a>
                                         <div class="process-icon">
@@ -223,7 +228,7 @@
                                 </li>
                             </ul>
                         </div>
-    
+
                         <div class="payment-section">
                             <div class="title mb-0">
                                 <div class="loader-line"></div>
@@ -232,8 +237,9 @@
                             <div class="accordion payment-accordion" id="accordionExample">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                            aria-expanded="false" aria-controls="collapseTwo">
                                             Payment Type
                                         </button>
                                     </h2>
@@ -247,7 +253,8 @@
                                                             <i class="ri-bill-line"></i>
                                                             <span class="card-name dark-text">Pay All</span>
                                                         </label>
-                                                        <input class="form-check-input" type="radio" name="paymentOption" value="payall" checked>
+                                                        <input class="form-check-input" type="radio"
+                                                            name="paymentOption" value="payall" checked>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -257,7 +264,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="col-lg-4">
                         <div class="order-summery-section sticky-top">
                             <div class="checkout-detail">
@@ -274,11 +281,11 @@
                                             th:text="${invoice.createdOnTable.belongsToStore.address}"></h6>
                                     </div>
                                 </div>
-    
+
                                 <h3 class="fw-semibold dark-text checkout-title">
                                     Order Summery
                                 </h3>
-    
+
                                 <ul>
                                     <li th:each="f : ${quantityGroupByFood}">
                                         <div class="horizontal-product-box">
@@ -294,9 +301,9 @@
                                         </div>
                                     </li>
                                 </ul>
-                                
+
                                 <div class="promo-code position-relative">
-                                    <form th:action="@{/applyPromocode}" method="get">
+                                    <form th:action="@{/applyPromoCode}" method="get">
                                         <input type="text" name="code" class="form-control code-form-control"
                                             placeholder="Enter promo code">
                                         <input type="hidden" th:name="invoiceid" th:value="${invoice.id}">
@@ -307,15 +314,19 @@
                                 <h5 class="fw-semibold dark-text pt-3 pb-3">Bill Details</h5>
                                 <div class="sub-total">
                                     <h6 class="content-color fw-normal">Sub Total</h6>
-                                    <h6 class="fw-semibold" th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}"></h6>
+                                    <h6 class="fw-semibold"
+                                        th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}">
+                                    </h6>
                                 </div>
                                 <div class="sub-total">
                                     <h6 class="content-color fw-normal">Discount</h6>
-                                    <h6 class="fw-semibold">0.0 k VND</h6>
+                                    <h6 class="fw-semibold" th:text="${#numbers.formatDecimal((discount)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}"></h6>
                                 </div>
                                 <div class="grand-total">
                                     <h6 class="fw-semibold dark-text">Total</h6>
-                                    <h6 class="fw-semibold amount" th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}"></h6>
+                                    <h6 class="fw-semibold amount"
+                                        th:text="${#numbers.formatDecimal((totalMoney-discount)/1000, 1, 'POINT', 1, 'POINT') + ' k VND'}">
+                                    </h6>
                                 </div>
                                 <h5 class="fw-semibold dark-text pt-3 pb-3">Payement operator</h5>
                                 <div class="sub-total">
@@ -323,19 +334,19 @@
                                         <img class="img img-fluid" style="width: 22px; height: 22px; border-radius: 50%;"
                                             th:src="${'/images/avatars/' + curUser.id + '.png'}">
                                         <span th:text="${curUser.username}"></span>
-                                        <span th:if="${curUser.balance >= totalMoney}">
+                                        <span th:if="${curUser.balance >= (totalMoney-discount)}">
                                             <img class="img img-fluid" style="height: 22px; width: 74px;" th:src="@{/images/enough_money.jpg}">
                                         </span>
-                                        <span th:unless="${curUser.balance >= totalMoney}">
+                                        <span th:unless="${curUser.balance >= (totalMoney-discount)}">
                                             <span style="color: #F2A93E; font-weight: bold;"
-                                                th:text="${'(Thiếu ' + #numbers.formatDecimal((totalMoney - curUser.balance)/1000, 1, 'POINT', 1, 'POINT') + 'k VND)'}"></span>
+                                                th:text="${'(Thiếu ' + #numbers.formatDecimal((totalMoney - discount - curUser.balance)/1000, 1, 'POINT', 1, 'POINT') + 'k VND)'}"></span>
                                         </span>
                                     </div>
-                                    <h6 class="fw-semibold" style="color: #277d2a;"
-                                        th:text="${#numbers.formatDecimal((totalMoney)/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
+                                    <h6 class="fw-semibold" style="color: #277d2a;" th:text="${#numbers.formatDecimal((totalMoney - discount)/1000, 1, 'POINT', 1, 'POINT') + 'k VND'}">
                                     </h6>
                                 </div>
-                                <a th:if="${curUser.balance >= totalMoney}" th:href="${'/payall?invoiceid=' + invoice.id + '&promo=' + promo}" class="btn theme-btn restaurant-btn w-100 rounded-2">PAY
+                                <a th:if="${curUser.balance >= (totalMoney-discount)}" th:href="${'/payall?invoiceid=' + invoice.id + '&promo=' + promo}"
+                                    class="btn theme-btn restaurant-btn w-100 rounded-2">PAY
                                     NOW</a>
                                 <img class="dots-design" th:src="@{/images/svg/dots-design.svg}" alt="dots">
                             </div>
@@ -360,7 +371,7 @@
         </div>
     </footer>
     <!-- footer end-->
-    
+
     <!-- toast starts -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -371,39 +382,40 @@
         </div>
     </div>
     <!-- toast end -->
-    
+
     <!-- Bg Overlay Start -->
     <div class="bg-overlay" id="overlay"></div>
     <!-- Bg Overlay end -->
-    
+
     <!-- tap to top start -->
     <button class="scroll scroll-to-top menu-page">
         <i class="ri-arrow-up-s-line arrow"></i>
     </button>
-    
+
     <!-- responsive space -->
     <div class="responsive-space"></div>
     <!-- responsive space -->
-    
+
     <!-- bootstrap js -->
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    
+
     <!-- footer accordion js -->
     <script th:src="@{/js/footer-accordion.js}"></script>
-    
+
     <!-- loader js -->
     <script th:src="@{/js/loader.js}"></script>
-    
+
     <!-- swiper js -->
     <script th:src="@{/js/swiper-bundle.min.js}"></script>
     <script th:src="@{/js/custom-swiper.js}"></script>
-    
+
     <!-- menu offcanvas js -->
     <script th:src="@{/js/menu-offcanvas.js}"></script>
-    
+
     <!-- toast js-->
     <script th:src="@{/js/toast.js}"></script>
     <!-- script js -->
     <script th:src="@{/js/script.js}"></script>
 </body>
+
 </html>
