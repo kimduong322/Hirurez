@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,8 @@ import com.duongdk.edu.Hiruez.model.StoreRate;
 import com.duongdk.edu.Hiruez.model.Table;
 import com.duongdk.edu.Hiruez.model.User;
 import com.duongdk.edu.Hiruez.model.UserVoucher;
+import com.duongdk.edu.Hiruez.model.Video;
+import com.duongdk.edu.Hiruez.model.Voucher;
 import com.duongdk.edu.Hiruez.model.DepositMoneyPayment;
 import com.duongdk.edu.Hiruez.model.FoodItem;
 import com.duongdk.edu.Hiruez.repository.FoodMenuRepository;
@@ -55,6 +59,8 @@ import com.duongdk.edu.Hiruez.repository.StoreRepository;
 import com.duongdk.edu.Hiruez.repository.TableRepository;
 import com.duongdk.edu.Hiruez.repository.UserRepository;
 import com.duongdk.edu.Hiruez.repository.UserVoucherRepository;
+import com.duongdk.edu.Hiruez.repository.VideoRepository;
+import com.duongdk.edu.Hiruez.repository.VoucherRepository;
 import com.duongdk.edu.Hiruez.repository.DepositMoneyPaymentRepository;
 import com.duongdk.edu.Hiruez.repository.FoodItemRepository;
 import com.google.zxing.BarcodeFormat;
@@ -104,6 +110,10 @@ public class CustomerController {
 	@Autowired private PaymentRepository paymentRepository;
 	
 	@Autowired private UserVoucherRepository userVoucherRepository;
+
+	@Autowired private VideoRepository videoRepository;
+
+	@Autowired private VoucherRepository voucherRepository;
 
 	@GetMapping("/customer/home")
 	public String getHomePage(Model model) {
@@ -282,9 +292,36 @@ public class CustomerController {
 
 		model.addAttribute("currentUser", curUser);
 
-		// get list of only 5 stores with highest by rating decreasing
+		// get list of only 8 stores with highest by rating decreasing
 		List<Store> stores = storeRepository.findAllByOrderByRatingDesc();
 		model.addAttribute("stores", stores);
+		List<Video> videos = videoRepository.findAll();
+		List<Video> topViewCount = videos.stream()
+				.sorted(Comparator.comparingInt(Video::getPlayCount).reversed())
+				.limit(30)
+				.toList();
+		List<Video> topCommentCount = videos.stream()
+				.sorted(Comparator.comparingInt(Video::getCommentCount).reversed())
+				.limit(30)
+				.toList();
+
+		List<Video> topTymCount = videos.stream()
+				.sorted(Comparator.comparingInt(Video::getTymCount).reversed())
+				.limit(30)
+				.toList();
+
+		model.addAttribute("topViewCount", topViewCount);
+		model.addAttribute("topTymCount", topTymCount);
+		model.addAttribute("topCommentCount", topCommentCount);
+		List<Video> randomVideos = new ArrayList<Video>(videos);
+		Collections.shuffle(randomVideos);
+		model.addAttribute("randomVideos", randomVideos.subList(0, Math.min(30, randomVideos.size())));
+
+		List<Voucher> coupons = voucherRepository.findAll();
+		if (coupons != null && !coupons.isEmpty()) {
+			coupons.remove(coupons.size() - 1);
+		}
+		model.addAttribute("coupons", coupons);
 		return "index";
 	}
 	
@@ -847,8 +884,45 @@ public class CustomerController {
 
 	@GetMapping("/shorts")
 	public String getShortsPage(Model model) {
+		
+		return "redirect:/";
+	}
+
+	@GetMapping("/claimVoucher")
+	public String getClaimVoucherPage(@RequestParam("userId") Long userId, @RequestParam("voucherId") Long voucherId) {
+		User user = userRepository.findById(userId).get();
+		Voucher voucher = voucherRepository.findById(voucherId).get();
+		List<UserVoucher> vouchers = userVoucherRepository.findByUser(user);
+		int hasVoucher = 0;
+		for (UserVoucher uv : vouchers) {
+			if (uv.getVoucher().getId() == voucherId) {
+				hasVoucher = 1;
+				uv.setRemainingCount(uv.getRemainingCount() + 1);
+				userVoucherRepository.save(uv);
+				break;
+			}
+		}
+		if (hasVoucher == 0) {
+			UserVoucher newuv = new UserVoucher(user, voucher, 1);
+			userVoucherRepository.save(newuv);
+		}
+		user.setVideoViewedTime(user.getVideoViewedTime() - voucher.getTotalVideoTimeToClaim());
+		userRepository.save(user);
+		return "redirect:/";
+	}
+
+	@GetMapping("/my-voucher")
+	public String getMyVoucher(Model model) {
 		User curUser = userRepository.findByUsername(CurrentUserUtil.getCurrentUsername());
 		model.addAttribute("curUser", curUser);
-		return "shorts";
+		List<UserVoucher> vouchers = userVoucherRepository.findByUser(curUser);
+		List<UserVoucher> canUseVoucher = new ArrayList<>();
+		for (UserVoucher uv : vouchers) {
+			if (uv.getRemainingCount() > 0) {
+				canUseVoucher.add(uv);
+			}
+		}
+		model.addAttribute("vouchers", canUseVoucher);
+		return "my_voucher";
 	}
 }

@@ -161,23 +161,27 @@
                         </div>
 
                         <ul class="profile-list">
-                            <li class="active">
+                            <li>
                                 <i class="ri-user-3-line"></i>
                                 <a th:href="${'/profile'}">Change profile</a>
                             </li>
                             <li>
                                 <i id="myorderremixicon" class="ri-shopping-bag-3-line"></i>
-                                <a th:href="${'/'}">My Order</a>
+                                <a th:href="${'/my-order'}">My Order</a>
                             </li>
                             <li>
                                 <i class="ri-wallet-line"></i>
                                 <a th:href="${'/my-payment'}">My Payment</a>
                             </li>
                             <li>
+                                <i class="ri-coupon-3-line"></i>
+                                <a th:href="${'/my-voucher'}">My Voucher</a>
+                            </li>
+                            <li>
                                 <i class="ri-video-line"></i>
                                 <a th:href="${'/profile'}">My Shorts</a>
                             </li>
-                            <li>
+                            <li  class="active">
                                 <i class="ri-settings-3-line"></i>
                                 <a th:href="${'/setting'}">Setting</a>
                             </li>
@@ -199,7 +203,7 @@
                         <div class="delete-account">
                             <h3 class="fw-medium dark-text">Delete Your Account</h3>
                             <p class="content-color">
-                                Hi <span class="dark-text fw-medium">Mark Jecno</span>,
+                                Hi <span class="dark-text fw-medium" th:text="${curUser.username}"></span>,
                             </p>
                             <p class="content-color">
                                 We are sorry to here you would like to delete your account.

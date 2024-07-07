@@ -319,6 +319,219 @@
     </section>
     <!-- popular restaurant section end-->
 
+    <!-- Featured Restaurants section starts -->
+    <section class="restaurant-list section-b-space ratio3_2">
+        <div class="container">
+            <div class="title restaurant-title w-border pb-0">
+                <h2>Funny Shorts</h2>
+                <div class="loader-line"></div>
+                <ul class="nav nav-pills restaurant-tab tab-style2 w-100 border-0 m-0" id="Tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pill-delivery-tab" data-bs-toggle="pill" data-bs-target="#delivery-tab">
+                            Most View
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pill-rating-tab" data-bs-toggle="pill" data-bs-target="#rating-tab">
+                            Most Tym
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pill-veg-tab" data-bs-toggle="pill" data-bs-target="#veg-tab">
+                            Most Comment
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pill-cost-tab" data-bs-toggle="pill" data-bs-target="#cost-tab">
+                            Explore
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tab-content restaurant-content" id="TabContent">
+                <div class="tab-pane fade show active" id="delivery-tab">
+                    <div class="container">
+                        <div class="video-container">
+                            <div class="video-item" th:each="video : ${topViewCount}">
+                                <div class="video-wrapper">
+                                    <video th:id="${'mostView' + video.id}"
+                                        th:src="${'https://hiruez-reels-bucket.s3.ap-southeast-2.amazonaws.com/videos/' + video.id + '.mp4'}"
+                                        controls></video>
+                                    <div class="video-controls">
+                                        <i class="fas fa-play play-btn"></i>
+                                        <i class="fas fa-redo reload-btn"></i>
+                                    </div>
+                                    <i class="fas fa-expand fullsize-btn"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="tab-pane fade" id="rating-tab">
+                    <div class="container">
+                        <div class="video-container">
+                            <div class="video-item" th:each="video : ${topTymCount}">
+                                <div class="video-wrapper">
+                                    <video th:id="${'mostTym' + video.id}"
+                                        th:src="${'https://hiruez-reels-bucket.s3.ap-southeast-2.amazonaws.com/videos/' + video.id + '.mp4'}"
+                                        controls></video>
+                                    <div class="video-controls">
+                                        <i class="fas fa-play play-btn"></i>
+                                        <i class="fas fa-redo reload-btn"></i>
+                                    </div>
+                                    <i class="fas fa-expand fullsize-btn"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="tab-pane fade" id="veg-tab">
+                    <div class="container">
+                        <div class="video-container">
+                            <div class="video-item" th:each="video : ${topCommentCount}">
+                                <div class="video-wrapper">
+                                    <video th:id="${'mostComment' + video.id}"
+                                        th:src="${'https://hiruez-reels-bucket.s3.ap-southeast-2.amazonaws.com/videos/' + video.id + '.mp4'}"
+                                        controls></video>
+                                    <div class="video-controls">
+                                        <i class="fas fa-play play-btn"></i>
+                                        <i class="fas fa-redo reload-btn"></i>
+                                    </div>
+                                    <i class="fas fa-expand fullsize-btn"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="tab-pane fade" id="cost-tab">
+                    <div class="container">
+                        <div class="video-container">
+                            <div class="video-item" th:each="video : ${randomVideos}">
+                                <div class="video-wrapper">
+                                    <video th:id="${'explore' + video.id}"
+                                        th:src="${'https://hiruez-reels-bucket.s3.ap-southeast-2.amazonaws.com/videos/' + video.id + '.mp4'}"
+                                        controls></video>
+                                    <div class="video-controls">
+                                        <i class="fas fa-play play-btn"></i>
+                                        <i class="fas fa-redo reload-btn"></i>
+                                    </div>
+                                    <i class="fas fa-expand fullsize-btn"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <script th:inline="javascript">
+                    document.querySelectorAll('.video-item').forEach(function (item) {
+                        const video = item.querySelector('video');
+                        const playButton = item.querySelector('.play-btn');
+                        const reloadButton = item.querySelector('.reload-btn');
+                        const fullsizeButton = item.querySelector('.fullsize-btn');
+
+                        if (video) {
+                            playButton.addEventListener('click', function () {
+                                if (video.paused) {
+                                    video.play();
+                                } else {
+                                    video.pause();
+                                }
+                            });
+
+                            reloadButton.addEventListener('click', function () {
+                                video.currentTime = 0;
+                                video.play();
+                            });
+
+                            fullsizeButton.addEventListener('click', function () {
+                                if (video.requestFullscreen) {
+                                    video.requestFullscreen();
+                                } else if (video.mozRequestFullScreen) { /* Firefox */
+                                    video.mozRequestFullScreen();
+                                } else if (video.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                                    video.webkitRequestFullscreen();
+                                } else if (video.msRequestFullscreen) { /* IE/Edge */
+                                    video.msRequestFullscreen();
+                                }
+                            });
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </section>
+    <!-- featured Restaurants section end -->
+
+    <!-- coupon section starts -->
+    <section>
+        <div class="container">
+            <div class="title restaurant-title w-border pb-0">
+                <div class="loader-line"></div>
+                <h2>Available Coupons</h2>
+                <ul class="nav nav-pills restaurant-tab tab-style2 w-100 border-0 m-0" id="offer-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pill-new-tab" data-bs-toggle="pill" data-bs-target="#new-tab"
+                            aria-selected="true" role="tab">
+                            New Coupon
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="TabContent">
+                <div class="tab-pane fade show active" id="new-tab" role="tabpanel" aria-labelledby="pill-new-tab" tabindex="0">
+                    <div class="row g-4">
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-12" th:each="coupon : ${coupons}">
+                            <div class="coupon-box">
+                                <div class="coupon-name">
+                                    <div class="coupon-img">
+                                        <img class="img-fluid img" th:src="@{/images/hiruez_logo.jpg}">
+                                    </div>
+                                    <div class="coupon-name-content d-flex align-items-center justify-content-between flex-wrap">
+                                        <div>
+                                            <h5 class="fw-semibold dark-text">FoodScan Pay</h5>
+                                            <h6 class="content-color">Use FoodScan Money</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="coupon-content">
+                                    <h6 th:if="${coupon.voucherType == 'PERCENT'}" class="fw-medium dark-text"
+                                        th:text="${'Discount ' + coupon.value + '% for your order using money in FoodScan'}">
+                                    </h6>
+                                    <h6 th:if="${coupon.voucherType == 'MONEY'}" class="fw-medium dark-text"
+                                        th:text="${'Discount ' + #numbers.formatDecimal(coupon.value/ 1000, 1, 'POINT', 1, 'POINT') + ' k VND for your order using money in FoodScan'}">
+                                    </h6>
+                                    <p>Apply for all your order</p>
+                                
+                                    <div class="coupon-apply">
+                                        <h6 class="coupon-code success-color" th:text="${coupon.code}"></h6>
+                                        <a th:href="${'/claimVoucher?userId=' + currentUser.id + '&voucherId=' + coupon.id}" class="btn theme-outline copy-btn mt-0 rounded-2"
+                                            th:if="${currentUser.videoViewedTime >= coupon.totalVideoTimeToClaim}">Claim</a>
+                                        <div class="progress" style="width: 50px;" th:unless="${currentUser.videoViewedTime >= coupon.totalVideoTimeToClaim}">
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                th:style="'width:' + (${currentUser.videoViewedTime} / ${coupon.totalVideoTimeToClaim} * 100) + '%'"
+                                                aria-valuenow="${currentUser.videoViewedTime / coupon.totalVideoTimeToClaim * 100}" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <img class="img-fluid coupon-bottom" th:src="@{/images/svg/coupon-bottom.svg}" alt="border-bottom">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-section section-b-space"></section>
+
     <!-- mobile fix menu start-->
     <div class="mobile-menu d-md-none d-block mobile-cart">
         <ul>
@@ -390,6 +603,11 @@
     <!-- menu offcanvas js -->
     <script th:src="@{/js/menu-offcanvas.js}"></script>
     
+    <!-- jquery slim min js-->
+    <script th:src="@{/js/jquery.slim.min.js}"></script>
+
+    <!-- poper min js-->
+    <!-- <script th:src="@{/js/poper.min.js}"></script> -->
     <!-- script js -->
     <script th:src="@{/js/script.js}"></script>
 </body>

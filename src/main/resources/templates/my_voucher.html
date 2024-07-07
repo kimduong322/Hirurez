@@ -25,7 +25,8 @@
     <header>
         <div class="container">
             <nav class="navbar navbar-expand-lg p-0">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvasNavbar">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#offcanvasNavbar">
                     <span class="navbar-toggler-icon">
                         <i class="ri-menu-line"></i>
                     </span>
@@ -37,7 +38,7 @@
                     class="btn btn-sm theme-btn location-btn mt-0 ms-3 d-flex align-content-center gap-1">
                     <span th:text="${curUser.balance + ' VND'}"></span><i class="ri-add-line"></i>
                 </a>
-    
+
                 <!-- Cart Section-->
                 <div class="nav-option order-md-2">
                     <div class="dropdown-button">
@@ -48,7 +49,7 @@
                         <div class="onhover-box">
                             <ul class="cart-list">
                                 <li class="product-box-contain">
-    
+
                                 </li>
                             </ul>
                             <div class="price-box">
@@ -62,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="profile-part dropdown-button order-md-2">
                         <img class="img-fluid profile-pic" th:src="${'/images/avatars/' + curUser.id + '.png'}"
                             alt="profile">
@@ -95,7 +96,7 @@
                     </div>
                 </div>
                 <!-- Cart Section end-->
-    
+
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
@@ -109,12 +110,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" th:href="@{'/'}">Home</a>
                                 </li>
-    
+
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
                                         data-bs-toggle="toggle" aria-expanded="false">Restaurants</a>
                                 </li>
-    
+
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" th:href="@{'/'}" role="button"
                                         data-bs-toggle="toggle" aria-expanded="false">Shorts</a>
@@ -151,7 +152,8 @@
                 <div class="col-lg-3">
                     <div class="profile-sidebar sticky-top">
                         <div class="profile-cover">
-                            <img class="img-fluid profile-pic" th:src="${'/images/avatars/' + curUser.id + '.png'}" alt="profile">
+                            <img class="img-fluid profile-pic" th:src="${'/images/avatars/' + curUser.id + '.png'}"
+                                alt="profile">
                         </div>
                         <div class="profile-name">
                             <h5 class="user-name" th:text="${curUser.username}"></h5>
@@ -159,7 +161,7 @@
                         </div>
 
                         <ul class="profile-list">
-                            <li class="active">
+                            <li>
                                 <i class="ri-user-3-line"></i>
                                 <a th:href="${'/profile'}">Change profile</a>
                             </li>
@@ -171,7 +173,7 @@
                                 <i class="ri-wallet-line"></i>
                                 <a th:href="${'/my-payment'}">My Payment</a>
                             </li>
-                            <li>
+                            <li class="active">
                                 <i class="ri-coupon-3-line"></i>
                                 <a th:href="${'/my-voucher'}">My Voucher</a>
                             </li>
@@ -193,130 +195,62 @@
 
                 <div class="col-lg-9">
                     <div class="change-profile-content">
-                        <div class="title">
-                            <div class="loader-line"></div>
-                            <h3>Change Profile</h3>
-                        </div>
+                        <div class="container">
+                            <div class="title restaurant-title w-border pb-0">
+                                <div class="loader-line"></div>
+                                <h2>Available Coupons</h2>
+                                <ul class="nav nav-pills restaurant-tab tab-style2 w-100 border-0 m-0" id="offer-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="pill-new-tab" data-bs-toggle="pill" data-bs-target="#new-tab"
+                                            aria-selected="true" role="tab">
+                                            New Coupon
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-content" id="TabContent">
+                                <div class="tab-pane fade show active" id="new-tab" role="tabpanel" aria-labelledby="pill-new-tab" tabindex="0">
+                                    <div class="row g-4">
+                                        <div class="col-xl-4 col-lg-6 col-md-12 col-12" th:each="coupon : ${vouchers}">
+                                            <div class="coupon-box">
+                                                <div class="coupon-name">
+                                                    <div class="coupon-img">
+                                                        <img class="img-fluid img" th:src="@{/images/hiruez_logo.jpg}" alt="c1">
+                                                    </div>
+                                                    <div class="coupon-name-content d-flex align-items-center justify-content-between flex-wrap">
+                                                        <div>
+                                                            <h5 class="fw-semibold dark-text">FoodScan Pay</h5>
+                                                            <h6 class="content-color">Use FoodScan Money</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="coupon-content">
+                                                    <h6 th:if="${coupon.voucher.voucherType == 'PERCENT'}" class="fw-medium dark-text"
+                                                        th:text="${'Discount ' + coupon.voucher.value + '% for your order using money in FoodScan'}">
+                                                    </h6>
+                                                    <h6 th:if="${coupon.voucher.voucherType == 'MONEY'}" class="fw-medium dark-text"
+                                                        th:text="${'Discount ' + #numbers.formatDecimal(coupon.voucher.value/ 1000, 1, 'POINT', 1, 'POINT') + ' k VND for your order using money in FoodScan'}">
+                                                    </h6>
+                                                    <p>Apply for all your order</p>
+                                                    <div class="coupon-apply">
+                                                        <h6 class="coupon-code success-color" th:text="${coupon.voucher.code}"></h6>
+                                                        <a class="btn theme-outline copy-btn mt-0 rounded-2">Copy</a>
+                                                    </div>
 
-                        <ul class="profile-details-list">
-                            <li>
-                                <div class="profile-content">
-                                    <div class="d-flex align-items-center gap-sm-2 gap-1">
-                                        <i class="ri-user-3-fill"></i>
-                                        <span>Name :</span>
+                                                </div>
+                                                <img class="img-fluid coupon-bottom" th:src="@{/images/svg/coupon-bottom.svg}" alt="border-bottom">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <h6 th:text="${curUser.username}"></h6>
                                 </div>
-                                <a href="#name" class="btn theme-outline" data-bs-toggle="modal">Edit</a>
-                            </li>
-                            <li>
-                                <div class="profile-content">
-                                    <div class="d-flex align-items-center gap-sm-2 gap-1">
-                                        <i class="ri-mail-fill"></i>
-                                        <span>Email :</span>
-                                    </div>
-                                    <h6 th:text="${curUser.email}"></h6>
-                                </div>
-                                <a href="#email" class="btn theme-outline" data-bs-toggle="modal">Change</a>
-                            </li>
-                            <li>
-                                <div class="profile-content">
-                                    <div class="d-flex align-items-center gap-sm-2 gap-1">
-                                        <i class="ri-lock-2-fill"></i>
-                                        <span>Password :</span>
-                                    </div>
-                                    <h6>******</h6>
-                                </div>
-                                <a href="#password" class="btn theme-outline mt-0" data-bs-toggle="modal">Change</a>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- profile section end -->
-
-    <!-- edit name modal starts -->
-    <div class="modal profile-modal fade" id="name" aria-hidden="true" aria-labelledby="exampleModalToggleName"
-        tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title" id="exampleModalToggleName">Name</h1>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="inputName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="inputName" th:value="${curUser.username}"
-                            placeholder="Enter your name">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="" class="btn theme-btn" data-bs-dismiss="modal">Save</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- edit name modal end -->
-
-    <!-- edit email modal starts -->
-    <div class="modal profile-modal fade" id="email" aria-hidden="true" aria-labelledby="exampleModalToggleEmail"
-        tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title" id="exampleModalToggleEmail">Email</h1>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="inputEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="inputEmail" th:value="${curUser.email}"
-                            placeholder="Enter your email">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a th:href="${'/profile'}" class="btn theme-btn" data-bs-dismiss="modal">Save</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- edit email modal end -->
-
-    <!-- edit password number modal starts -->
-    <div class="modal profile-modal fade" id="password" aria-hidden="true" aria-labelledby="exampleModalTogglePass"
-        tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title" id="exampleModalTogglePass">Password</h1>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="inputcurrentPassword" class="form-label">
-                            Current Password</label>
-                        <input type="password" class="form-control" id="inputcurrentPassword"
-                            placeholder="Enter your current password">
-                    </div>
-                    <div class="form-group mt-2">
-                        <label for="inputnewPassword" class="form-label">
-                            New Password</label>
-                        <input type="password" class="form-control" id="inputnewPassword"
-                            placeholder="Enter your new password">
-                    </div>
-                    <div class="form-group mt-2">
-                        <label for="inputconfirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="inputconfirmPassword"
-                            placeholder="Enter your confirm password">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="profile.html" class="btn theme-btn" data-bs-dismiss="modal">Save</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- edit password number modal end -->
 
     <!-- mobile fix menu start-->
     <div class="mobile-menu d-md-none d-block mobile-cart">

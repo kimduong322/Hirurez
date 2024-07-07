@@ -40,7 +40,6 @@ public class User implements Serializable{
 	@JoinColumn(name = "role_id", nullable = false)
 	private UserRole role;
 
-	@Column(name = "video_viewed_time")
 	private Long videoViewedTime;
     
     public User(String username, String password, String email, Double balance, UserRole role) {
@@ -54,6 +53,16 @@ public class User implements Serializable{
 
 	public boolean hasRole(String roleName) {
 		return this.role.getName().equals(roleName);
+	}
+
+	public User(String username, String password, String email, Double balance, UserRole role, Long videoViewedTime) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.balance = balance;
+		this.role = role;
+		this.videoViewedTime = videoViewedTime;
 	}
 }
 
